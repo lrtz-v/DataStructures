@@ -1,5 +1,7 @@
 package RedBlackTree
 
+import "fmt"
+
 // RBNode of tree
 type RBNode struct {
 	Value  int
@@ -185,6 +187,114 @@ func (RB *RBTree) Insert(value int) {
 	RB.insertFixUp(node)
 }
 
+// PreOrderTraversal travel (前序勉励)
+// root, left, right
+func (RB *RBTree) PreOrderTraversal(node *RBNode) {
+	if node == nil {
+		return
+	}
+
+	fmt.Println(node.Value)
+	if node.left != nil {
+		RB.PreOrderTraversal(node.left)
+	}
+	if node.right != nil {
+		RB.PreOrderTraversal(node.right)
+	}
+}
+
+// InOrderTraversal Traversal 中序遍历
+// Left, Root, Right
+func (RB *RBTree) InOrderTraversal(node *RBNode) {
+	if node == nil {
+		return
+	}
+
+	if node.left != nil {
+		RB.InOrderTraversal(node.left)
+	}
+	fmt.Println(node.Value)
+	if node.right != nil {
+		RB.InOrderTraversal(node.right)
+	}
+}
+
+// PostOrderTraversal Traversal 后序遍历
+// left, right, root
+func (RB *RBTree) PostOrderTraversal(node *RBNode) {
+	if node == nil {
+		return
+	}
+
+	if node.left != nil {
+		RB.InOrderTraversal(node.left)
+	}
+	if node.right != nil {
+		RB.InOrderTraversal(node.right)
+	}
+	fmt.Println(node.Value)
+}
+
+func (RB *RBTree) minNode(node *RBNode) *RBNode {
+	for {
+		if node.left == nil {
+			break
+		}
+		RB.minNode(node.left)
+	}
+	return node
+}
+
+func (RB *RBTree) maxNode(node *RBNode) *RBNode {
+	for {
+		if node.right == nil {
+			break
+		}
+		RB.maxNode(node.right)
+	}
+	return node
+}
+
+// 查找节点x的后继节点,即大于节点x的最小节点
+func (RB *RBTree) successor(node *RBNode) *RBNode {
+	if node.right != nil {
+		return RB.minNode(node.right)
+	}
+
+	if node == node.parent.left {
+		return node.parent
+	}
+
+	p := node.parent
+	for {
+		if p == nil || node != p.right {
+			break
+		}
+		node, p = p, p.parent
+	}
+	return p
+}
+
+// 查找节点x的前驱节点，即小于节点x的最大节点
+func (RB *RBTree) predecessor(node *RBNode) *RBNode {
+	if node.left != nil {
+		return node.left
+	}
+
+	if node == node.parent.right {
+		return node.parent
+	}
+
+	p := node.parent
+	for {
+		if p == nil || node != p.left {
+			break
+		}
+		node, p = p, p.parent
+	}
+	return p
+}
+
 // Search node
 func (RB *RBTree) Search(value int) *RBNode {
 	node := RB.root
@@ -202,6 +312,19 @@ func (RB *RBTree) Search(value int) *RBNode {
 		}
 	}
 	return node
+}
+
+func (RB *RBTree) destroy(root *RBNode) {
+	if root == nil {
+		return
+	}
+	if root.left != nil {
+		RB.destroy(root.left)
+	}
+	if root.right != nil {
+		RB.destroy(root.right)
+	}
+	root = nil
 }
 
 // NewRBTree create a new NewRBTree with a set of elements
