@@ -3,17 +3,6 @@
 
 ## 更多知识
 
-- ### 递归（Recursion）
-    - [ ] Stanford 大学关于递归 & 回溯的课程:
-        - [ ] [课程 8 | 抽象编程 (video)](https://www.youtube.com/watch?v=gl3emqCuueQ&list=PLFE6E58F856038C69&index=8)
-        - [ ] [课程 9 | 抽象编程 (video)](https://www.youtube.com/watch?v=uFJhEPrbycQ&list=PLFE6E58F856038C69&index=9)
-        - [ ] [课程 10 | 抽象编程 (video)](https://www.youtube.com/watch?v=NdF1QDTRkck&index=10&list=PLFE6E58F856038C69)
-        - [ ] [课程 11 | 抽象编程 (video)](https://www.youtube.com/watch?v=p-gpaIGRCQI&list=PLFE6E58F856038C69&index=11)
-    - 什么时候适合使用
-    - 尾递归会更好么?
-        - [ ] [什么是尾递归以及为什么它如此糟糕?](https://www.quora.com/What-is-tail-recursion-Why-is-it-so-bad)
-        - [ ] [尾递归 (video)](https://www.youtube.com/watch?v=L1jjXGfxozc)
-
 - ### 动态规划（Dynamic Programming）
     - **注意** ：动态规划是门极为重要的技术，尽管其并未被 Google 提供的准备手册提及，但你可能会对寻求最佳解的方式有点疑问，所以我将其列入这份表单。
     - 这一部分会有点困难，每个可以用动态规划解决的问题都必须先定义出递推关系，要推导出来可能会有点棘手。
@@ -41,16 +30,6 @@
         - [ ] [全局成对序列排列 (video)](https://www.coursera.org/learn/algorithmic-thinking-2/lecture/UZ7o6/global-pairwise-sequence-alignment)
         - [ ] [本地成对序列排列 (video)](https://www.coursera.org/learn/algorithmic-thinking-2/lecture/WnNau/local-pairwise-sequence-alignment)
 
-- ### 组合（Combinatorics） (n 中选 k 个) & 概率（Probability）
-    - [ ] [数据技巧: 如何找出阶乘、排列和组合(选择) (video)](https://www.youtube.com/watch?v=8RRo6Ti9d0U)
-    - [ ] [来点学校的东西: 概率 (video)](https://www.youtube.com/watch?v=sZkAAk9Wwa4)
-    - [ ] [来点学校的东西: 概率和马尔可夫链 (video)](https://www.youtube.com/watch?v=dNaJg-mLobQ)
-    - [ ] 可汗学院:
-        - 课程设置:
-            - [ ] [概率理论基础](https://www.khanacademy.org/math/probability/probability-and-combinatorics-topic)
-        - 视频 - 41 (每一个都短小精悍):
-            - [ ] [概率解释 (video)](https://www.youtube.com/watch?v=uzkc-qNVoOk&list=PLC58778F28211FA19)
-
 - ### NP, NP-完全和近似算法
     - 知道最经典的一些 NP 完全问题，比如旅行商问题和背包问题,
         而且能在面试官试图忽悠你的时候识别出他们。
@@ -72,6 +51,17 @@
         - [Jupyter 笔记本](http://nbviewer.jupyter.org/url/norvig.com/ipython/TSP.ipynb)
     - 《算法导论》的第 1048 - 1140 页。
 
+- ### 递归（Recursion）
+    - [ ] Stanford 大学关于递归 & 回溯的课程:
+        - [ ] [课程 8 | 抽象编程 (video)](https://www.youtube.com/watch?v=gl3emqCuueQ&list=PLFE6E58F856038C69&index=8)
+        - [ ] [课程 9 | 抽象编程 (video)](https://www.youtube.com/watch?v=uFJhEPrbycQ&list=PLFE6E58F856038C69&index=9)
+        - [ ] [课程 10 | 抽象编程 (video)](https://www.youtube.com/watch?v=NdF1QDTRkck&index=10&list=PLFE6E58F856038C69)
+        - [ ] [课程 11 | 抽象编程 (video)](https://www.youtube.com/watch?v=p-gpaIGRCQI&list=PLFE6E58F856038C69&index=11)
+    - 什么时候适合使用
+    - 尾递归会更好么?
+        - [ ] [什么是尾递归以及为什么它如此糟糕?](https://www.quora.com/What-is-tail-recursion-Why-is-it-so-bad)
+        - [ ] [尾递归 (video)](https://www.youtube.com/watch?v=L1jjXGfxozc)
+
 - ### 缓存（Cache）
     - [ ] LRU 缓存:
         - [ ] [LRU 的魔力 (100 Days of Google Dev) (video)](https://www.youtube.com/watch?v=R5ON3iwx78M)
@@ -80,6 +70,16 @@
     - [ ] CPU 缓存:
         - [ ] [MIT 6.004 L15: 存储体系 (video)](https://www.youtube.com/watch?v=vjYF_fAZI5E&list=PLrRW1w6CGAcXbMtDFj205vALOGmiRc82-&index=24)
         - [ ] [MIT 6.004 L16: 缓存的问题 (video)](https://www.youtube.com/watch?v=ajgC3-pyGlk&index=25&list=PLrRW1w6CGAcXbMtDFj205vALOGmiRc82-)
+
+- ### 组合（Combinatorics） (n 中选 k 个) & 概率（Probability）
+    - [ ] [数据技巧: 如何找出阶乘、排列和组合(选择) (video)](https://www.youtube.com/watch?v=8RRo6Ti9d0U)
+    - [ ] [来点学校的东西: 概率 (video)](https://www.youtube.com/watch?v=sZkAAk9Wwa4)
+    - [ ] [来点学校的东西: 概率和马尔可夫链 (video)](https://www.youtube.com/watch?v=dNaJg-mLobQ)
+    - [ ] 可汗学院:
+        - 课程设置:
+            - [ ] [概率理论基础](https://www.khanacademy.org/math/probability/probability-and-combinatorics-topic)
+        - 视频 - 41 (每一个都短小精悍):
+            - [ ] [概率解释 (video)](https://www.youtube.com/watch?v=uzkc-qNVoOk&list=PLC58778F28211FA19)
 
 - ### 进程（Processe）和线程（Thread）
     - [ ] 计算机科学 162 - 操作系统 (25 个视频):
