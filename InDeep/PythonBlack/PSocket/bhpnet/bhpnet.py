@@ -8,6 +8,7 @@ import sys
 import getopt
 import threading
 import subprocess
+import select
 
 listen = False
 command = False
@@ -35,10 +36,12 @@ def usage():
     sys.exit(0)
 
 
-def client_sender():
+def client_sender(buffer):
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         client.connect((target, port))
+        if buffer:
+            client.send(buffer)
         while True:
             response = ""
             while True:
@@ -172,7 +175,10 @@ def main():
             assert False, "Unhandled Option"
 
     if not listen and len(target) and port > 0:
-        client_sender()
+        buffer = ''
+        if select.select([sys.stdin], [], [], 0.0)[0]:
+            buffer = sys.stdin.read(1024)
+        client_sender(buffer)
 
     if listen:
         server_loop()
