@@ -1,3 +1,8 @@
+"""
+python bhpnet.py -l -p 9999 -c
+python bhpnet.py -t 127.0.0.1 -p 9999
+"""
+
 import socket
 import sys
 import getopt
@@ -30,27 +35,23 @@ def usage():
     sys.exit(0)
 
 
-def client_sender(buffer):
+def client_sender():
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         client.connect((target, port))
-        if len(buffer):
-            client.send(buffer)
-
         while True:
-
-            recv_len = 1
             response = ""
-
-            while recv_len:
+            while True:
                 data = client.recv(4096)
-                recv_len = len(data)
                 response += data
-                if recv_len < 4096:
+                if len(data) < 4096:
                     break
-
             print response,
-            buffer = raw_input("")
+
+            try:
+                buffer = raw_input("")
+            except (KeyboardInterrupt, SystemExit):
+                raise
             buffer += "\n"
             client.send(buffer)
 
@@ -58,8 +59,6 @@ def client_sender(buffer):
         print str(err)
         print "[*] Exception! Exiting."
         client.close()
-
-    # client.close()
 
 
 def client_handler(client_socket):
@@ -89,20 +88,29 @@ def client_handler(client_socket):
         client_socket.send(output)
 
     if command:
-        while True:
-            client_socket.send("<BHP:#> ")
-            cmd_buffer = ""
-            while "\n" not in cmd_buffer:
-                cmd_buffer += client_socket.recv(1024)
+        try:
+            insert = "<BHP:#> "
+            output = ""
+            while True:
+                client_socket.send('\n'.join([output,insert]))
+                cmd_buffer = ""
+                while True:
+                    data = client_socket.recv(1024)
+                    print "[*] Get : %s, len: %d" % (data, len(data))
+                    cmd_buffer += data
+                    if not data or '\n' in data:
+                        break
 
-            output = run_command(cmd_buffer)
-            client_socket.send(output)
+                if len(cmd_buffer) > 1:
+                    output = run_command(cmd_buffer)
+        except Exception:
+            return
 
 
 def server_loop():
     global target
     if not len(target):
-        target = "0.0.0.0"
+        target = "127.0.0.1"
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind((target, port))
     server.listen(5)
@@ -116,6 +124,7 @@ def server_loop():
 
 def run_command(target_command):
     target_command = target_command.rstrip()
+    print "[*] target_command: %s" % target_command
     try:
         output = subprocess.check_output(target_command, stderr=subprocess.STDOUT, shell=True)
     except Exception as err:
@@ -163,8 +172,7 @@ def main():
             assert False, "Unhandled Option"
 
     if not listen and len(target) and port > 0:
-        buffer = sys.stdin.read()
-        client_sender(buffer)
+        client_sender()
 
     if listen:
         server_loop()
