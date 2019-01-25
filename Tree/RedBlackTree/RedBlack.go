@@ -66,7 +66,7 @@ func (RB *RBTree) leftRotate(x *RBNode) {
 }
 
 /*
- * 左旋示意图：对节点y进行右旋
+ * 右旋示意图：对节点y进行右旋
  *        p                   p
  *       /                   /
  *      y                   x

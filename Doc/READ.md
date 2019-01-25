@@ -330,10 +330,6 @@
 - [ ] 2-5 分钟的短视频系列 - Michael Sambol (18 个):
     - [Videos](https://www.youtube.com/channel/UCzDJwLWoYCUQowF_nG3m5OQ)
 
-#### 排序:
-
-- [ ] 归并排序: https://www.youtube.com/watch?v=GCae1WNvnZM
-
 
 ## 书籍
 
@@ -413,27 +409,6 @@
     - [ ] [大、小端字节序的里里外外(Big And Little Endian Inside/Out) (视频)](https://www.youtube.com/watch?v=oBSuXP-1Tc0)
         - 内核开发者的讨论非常技术性，如果大多数都超出了你的理解范围，不要太担心。
         - 前半段已经足够了。
-
-- ### Emacs and vi(m)
-    - Yegge 的建议，从一个很早以前的亚马逊招聘信息中而来：熟悉基于 unix 的代码编辑器
-    - vi(m):
-        - [使用 vim 进行编辑 01 - 安装, 设置和模式 (视频)](https://www.youtube.com/watch?v=5givLEMcINQ&index=1&list=PL13bz4SHGmRxlZVmWQ9DvXo1fEg4UdGkr)
-        - [VIM 的冒险之旅](http://vim-adventures.com/)
-        - 4 个视频集:
-            - [vi/vim 编辑器 - 课程 1](https://www.youtube.com/watch?v=SI8TeVMX8pk)
-            - [vi/vim 编辑器 - 课程 2](https://www.youtube.com/watch?v=F3OO7ZIOaJE)
-            - [vi/vim 编辑器 - 课程 4](https://www.youtube.com/watch?v=1lYD5gwgZIA)
-            - [vi/vim 编辑器 - 课程 3](https://www.youtube.com/watch?v=ZYEccA_nMaI)
-        - [使用 Vi 而不是 Emacs](http://www.cs.yale.edu/homes/aspnes/classes/223/notes.html#Using_Vi_instead_of_Emacs)
-    - emacs:
-        - [基础 Emacs 教程 (视频)](https://www.youtube.com/watch?v=hbmV1bnQ-i0)
-        - 3 个视频集:
-            - [Emacs 教程 (初学者) -第 1 部分- 文件命令, 剪切/复制/粘贴,  自定义命令](https://www.youtube.com/watch?v=ujODL7MD04Q)
-            - [Emacs 教程 (初学者 -第 2 部分- Buffer 管理, 搜索, M-x grep 和 rgrep 模式](https://www.youtube.com/watch?v=XWpsRupJ4II)
-            - [Emacs 教程 (初学者 -第 3 部分- 表达式, 声明, ~/.emacs 文件和包机制](https://www.youtube.com/watch?v=paSgzPso-yc)
-        - [Evil 模式: 或许, 我是怎样对 Emacs 路人转粉的 (视频)](https://www.youtube.com/watch?v=JWD1Fpdd4Pc)
-        - [使用 Emacs 开发 C 程序](http://www.cs.yale.edu/homes/aspnes/classes/223/notes.html#Writing_C_programs_with_Emacs)
-        - [(或许) 深度组织模式:管理结构 (视频)](https://www.youtube.com/watch?v=nsGYet02bEk)
 
 - ### Unix 命令行工具
     - 下列内容中的优秀工具由的 Yegge 推荐，Yegge 目前致力于 Amazon 人事招聘处。
