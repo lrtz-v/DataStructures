@@ -1,4 +1,4 @@
-package RedBlackTree
+package redblacktree
 
 import (
 	"testing"

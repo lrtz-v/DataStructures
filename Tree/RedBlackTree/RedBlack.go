@@ -1,28 +1,41 @@
-package RedBlackTree
+package redblacktree
 
-import "fmt"
+import (
+	"fmt"
+	"reflect"
+)
+
+const (
+	red   = false
+	black = true
+)
 
 // RBNode of tree
 type RBNode struct {
-	Value  int
-	color  bool
-	left   *RBNode
-	right  *RBNode
-	parent *RBNode
+	key                 interface{}
+	value               interface{}
+	color               bool
+	left, right, parent *RBNode
 }
 
 // RBTree define
 type RBTree struct {
-	root *RBNode
-	size int
+	root    *RBNode
+	keyType reflect.Type
+	valType reflect.Type
+	size    int
+	compare func(a, b interface{}) bool
 }
 
-func compareToNode(nodeA, nodeB *RBNode) bool {
-	return nodeA.Value < nodeB.Value
+func (RB *RBTree) init(key, val interface{}, compare func(a, b interface{}) bool) {
+	RB.root = &RBNode{key: key, value: val, color: false}
+	RB.compare = compare
+	RB.keyType = reflect.TypeOf(key)
+	RB.valType = reflect.TypeOf(val)
 }
 
-func compareToValue(node *RBNode, value int) int {
-	return node.Value - value
+func (RB *RBTree) insert() {
+
 }
 
 /*
@@ -102,99 +115,14 @@ func (RB *RBTree) rightRotate(y *RBNode) {
 
 }
 
-func (RB *RBTree) changeColor(nodes ...*RBNode) {
-	for _, node := range nodes {
-		node.color = !node.color
-	}
-}
-
-// 1.每个节点不是红色就是黑色的；
-// 2.根节点总是黑色的；
-// 3.如果节点是红色的，则它的子节点必须是黑色的（反之不一定）；
-// 4.从根节点到叶节点或空子节点的每条路径，必须包含相同数目的黑色节点（即相同的黑色高度）。
-func (RB *RBTree) insertFixUp(node *RBNode) {
-	for {
-		parent := node.parent
-		if !(node.parent != nil && node.parent.color) {
-			break
-		}
-		gparent := parent.parent
-		if parent == gparent.left {
-			uncle := gparent.right
-			if uncle != nil && uncle.color {
-				RB.changeColor(parent, uncle, gparent)
-				node = gparent
-				continue
-			}
-
-			if node == parent.right {
-				RB.leftRotate(parent)
-				node, parent = parent, node
-			}
-			RB.changeColor(parent, gparent)
-			RB.rightRotate(gparent)
-		} else {
-			uncle := gparent.left
-			if uncle != nil && uncle.color {
-				RB.changeColor(parent, uncle, gparent)
-				node = gparent
-				continue
-			}
-
-			if node == parent.left {
-				RB.rightRotate(parent)
-				node, parent = parent, node
-			}
-			RB.changeColor(parent, gparent)
-			RB.leftRotate(gparent)
-		}
-
-		RB.changeColor(RB.root)
-	}
-}
-
-// Insert element to RBTree
-func (RB *RBTree) Insert(value int) {
-	node := &RBNode{Value: value, color: true}
-
-	var current *RBNode
-	x := RB.root
-
-	//1. 找到插入的位置
-	for {
-		if x == nil {
-			break
-		}
-		current = x
-		if compareToNode(node, x) {
-			x = x.left
-		} else {
-			x = x.right
-		}
-	}
-	node.parent = current
-
-	if current != nil {
-		if compareToNode(node, current) {
-			current.left = node
-		} else {
-			current.right = node
-		}
-	} else {
-		RB.root = node
-	}
-
-	RB.insertFixUp(node)
-}
-
-// PreOrderTraversal travel (前序勉励)
+// PreOrderTraversal travel (前序遍历)
 // root, left, right
 func (RB *RBTree) PreOrderTraversal(node *RBNode) {
 	if node == nil {
 		return
 	}
 
-	fmt.Println(node.Value)
+	fmt.Println(node.value)
 	if node.left != nil {
 		RB.PreOrderTraversal(node.left)
 	}
@@ -213,7 +141,7 @@ func (RB *RBTree) InOrderTraversal(node *RBNode) {
 	if node.left != nil {
 		RB.InOrderTraversal(node.left)
 	}
-	fmt.Println(node.Value)
+	fmt.Println(node.value)
 	if node.right != nil {
 		RB.InOrderTraversal(node.right)
 	}
@@ -232,103 +160,11 @@ func (RB *RBTree) PostOrderTraversal(node *RBNode) {
 	if node.right != nil {
 		RB.InOrderTraversal(node.right)
 	}
-	fmt.Println(node.Value)
+	fmt.Println(node.value)
 }
 
-func (RB *RBTree) minNode(node *RBNode) *RBNode {
-	for {
-		if node.left == nil {
-			break
-		}
-		RB.minNode(node.left)
-	}
-	return node
-}
-
-func (RB *RBTree) maxNode(node *RBNode) *RBNode {
-	for {
-		if node.right == nil {
-			break
-		}
-		RB.maxNode(node.right)
-	}
-	return node
-}
-
-// 查找节点x的后继节点,即大于节点x的最小节点
-func (RB *RBTree) successor(node *RBNode) *RBNode {
-	if node.right != nil {
-		return RB.minNode(node.right)
-	}
-
-	if node == node.parent.left {
-		return node.parent
-	}
-
-	p := node.parent
-	for {
-		if p == nil || node != p.right {
-			break
-		}
-		node, p = p, p.parent
-	}
-	return p
-}
-
-// 查找节点x的前驱节点，即小于节点x的最大节点
-func (RB *RBTree) predecessor(node *RBNode) *RBNode {
-	if node.left != nil {
-		return node.left
-	}
-
-	if node == node.parent.right {
-		return node.parent
-	}
-
-	p := node.parent
-	for {
-		if p == nil || node != p.left {
-			break
-		}
-		node, p = p, p.parent
-	}
-	return p
-}
-
-// Search node
-func (RB *RBTree) Search(value int) *RBNode {
-	node := RB.root
-	for {
-		if node == nil {
-			break
-		}
-		tmp := compareToValue(node, value)
-		if tmp < 0 {
-			node = node.right
-		} else if tmp > 0 {
-			node = node.left
-		} else {
-			return node
-		}
-	}
-	return node
-}
-
-func (RB *RBTree) destroy(root *RBNode) {
-	if root == nil {
-		return
-	}
-	if root.left != nil {
-		RB.destroy(root.left)
-	}
-	if root.right != nil {
-		RB.destroy(root.right)
-	}
-	root = nil
-}
-
-// NewRBTree create a new NewRBTree with a set of elements
-func NewRBTree(set []int) (*RBTree, error) {
-
-	return nil, nil
+func colorFlip(node *RBNode) {
+	node.color = !node.color
+	node.left.color = !node.left.color
+	node.right.color = !node.right.color
 }
