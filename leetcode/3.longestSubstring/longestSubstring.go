@@ -1,6 +1,32 @@
 package longestSubstring
 
-type Unit struct{}
+type unit struct{}
+
+type bitmap struct {
+	words  []uint64
+	length int
+}
+
+func newBitmap() *bitmap {
+	return &bitmap{}
+}
+
+func (bitmap *bitmap) has(num int) bool {
+	word, bit := num/64, uint(num%64)
+	return word < len(bitmap.words) && (bitmap.words[word]&(1<<bit)) != 0
+}
+
+func (bitmap *bitmap) add(num int) {
+	word, bit := num/64, uint(num%64)
+	for word >= len(bitmap.words) {
+		bitmap.words = append(bitmap.words, 0)
+	}
+	// 判断num是否已经存在bitmap中
+	if bitmap.words[word]&(1<<bit) == 0 {
+		bitmap.words[word] |= 1 << bit
+		bitmap.length++
+	}
+}
 
 func repeat(str *string) bool {
 	tmpList := make(map[int32]bool)
@@ -46,7 +72,7 @@ func lengthOfLongestSubstring(s string) int {
 	}
 }
 
-func lengthOfLongestSubstring3(s string) int {
+func lengthOfLongestSubstring2(s string) int {
 	length := len(s)
 	if length == 0 {
 		return 0
@@ -56,21 +82,20 @@ func lengthOfLongestSubstring3(s string) int {
 	startIndex := 0
 	endIndex := 0
 	tmpMaxLen := 0
-	tmpHash := make(map[rune]Unit)
+	bitmapPtr := newBitmap()
 	for {
-		tmpStr := rune(s[endIndex : endIndex+1][0])
-		if _, ok := tmpHash[tmpStr]; ok {
+		tmpVal := int(s[endIndex : endIndex+1][0])
+		if bitmapPtr.has(tmpVal) {
 			if tmpMaxLen > maxLen {
 				maxLen = tmpMaxLen
 			}
 			startIndex++
 			endIndex = startIndex
-			tmpHash = nil
-			tmpHash = make(map[int32]Unit)
+			bitmapPtr = newBitmap()
 			tmpMaxLen = 0
 			continue
 		} else {
-			tmpHash[tmpStr] = Unit{}
+			bitmapPtr.add(tmpVal)
 			tmpMaxLen++
 		}
 
@@ -88,4 +113,58 @@ func lengthOfLongestSubstring3(s string) int {
 		}
 	}
 	return maxLen
+}
+
+func lengthOfLongestSubstring3(s string) int {
+	length := len(s)
+	if length == 0 {
+		return 0
+	}
+
+	maxLen := 0
+	startIndex := 0
+	endIndex := 0
+	tmpLen := 0
+
+	for ; endIndex < length; endIndex++ {
+		for i := startIndex; i < endIndex; i++ {
+			tmpLen = endIndex - startIndex
+			if s[i] == s[endIndex] {
+				if tmpLen > maxLen {
+					maxLen = tmpLen
+				}
+				startIndex = i + 1
+				if length-startIndex <= maxLen {
+					return maxLen
+				}
+				break
+			}
+		}
+	}
+	return endIndex - startIndex
+}
+
+func lengthOfLongestSubstring4(s string) int {
+	m := 0
+	iS := 0
+	iE := 0
+
+	for ; iE < len(s); iE++ {
+		for j := iS; j < iE; j++ {
+			if s[iE] == s[j] {
+				if iE-iS > m {
+					m = iE - iS
+				}
+
+				iS = j + 1
+
+				if len(s)-iS <= m {
+					return m
+				}
+				break
+			}
+		}
+	}
+
+	return iE - iS
 }
