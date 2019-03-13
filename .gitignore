@@ -2,3 +2,5 @@
 *.out
 *.log
 *.test
+.source
+*.class

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <!--
+        含义：组织标识，定义了项目属于哪个组，风向标，坐标，或者说若把本项目打包
+        用途：此名称则是本地仓库中的路径，列如：otowa.user.dao，在M2_REPO目录下，将是: otowa/user/dao目录
+        命名规范:项目名称，模块，子模块
+    -->
+    <groupId>4th.algorithms</groupId>
+    <!--
+        含义：项目名称也可以说你所模块名称，定义当面Maven项目在组中唯一的ID
+        用途：例如：user-dao，在M2_REPO目录下，将是：otowa/user/dao/user-dao目录
+        命名规范:唯一就好
+    -->
+    <artifactId>algorithms</artifactId>
+    <!--
+        含义：项目当前的版本号
+        用途：例如：0.0.1-SNAPSHOT，在M2_REPO目录下，将是：otowa/user/dao/user-dao/0.0.1-SNAPSHOT目录
+    -->
+    <version>0.0.1-SNAPSHOT</version>
+    <!-- 打包的格式，可以为：pom , jar , maven-plugin , ejb , war , ear , rar , par -->
+    <packaging>war</packaging>
+    <!-- 元素声明了一个对用户更为友好的项目名称 -->
+    <name>maven</name>
+    <!--<dependencies></dependencies>-->
+</project>
