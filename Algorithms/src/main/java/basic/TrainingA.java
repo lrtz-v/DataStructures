@@ -1,7 +1,6 @@
 package basic;
 import java.io.*;
-import java.util.regex.*;
-
+import edu.princeton.cs.algs4.StdDraw;
 
 /**
  * TrainingA
@@ -53,5 +52,27 @@ public class TrainingA {
     public static int euclid(int p, int q) {
         if (q == 0) {return p;}
         return euclid(q, p % q);
+    }
+
+    /**
+     * 创建bool NxN a[][], ij互质时, 值为true, 否则为false
+     *
+     */
+    public static boolean[][] createMatrix(int n) {
+        boolean[][] a = new boolean[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                a[i][j] = euclid(i, j) == 1;
+            }
+        }
+        return a;
+    }
+
+    /**
+     * 画一个圆
+     */
+    public static void drawCycle(double x, double y, double r) {
+        StdDraw.circle(x, y, r);
+        StdDraw.show();
     }
 }

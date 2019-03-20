@@ -1,6 +1,7 @@
 package basic;
 
 import org.junit.jupiter.api.Test;
+import java.util.Arrays;
 
 class TrainingATest {
 
@@ -23,5 +24,16 @@ class TrainingATest {
     @Test
     void euclid2() {
         System.out.printf("num1: %d\tnum2:%d\tres:%d\n", 1111111, 1234567, TrainingA.euclid(1111111, 1234567));
+    }
+
+    @Test
+    void createMatrix() {
+        boolean[][] a = TrainingA.createMatrix(4);
+        for(boolean[] x : a) System.out.printf("%b\t%b\t%b\t%b\n", x[0], x[1], x[2], x[3]);
+    }
+
+    @Test
+    void drawCycle() {
+        TrainingA.drawCycle(0.5, 0.5, 0.2);
     }
 }
