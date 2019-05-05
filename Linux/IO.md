@@ -89,13 +89,39 @@
 
 - int select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout)
 - 可以设置timeval决定该系统调用是否阻塞，设置为NULL即阻塞，为0不阻塞
+- 单个进程所打开的FD是有限制的，它由FD_SETSIZE设置，32位机默认是1024个。64位机默认是2048。一般来说这个数目和系统内存关系很大，具体数目可以cat /proc/sys/fs/file-max察看
+- 对socket进行扫描时是线性扫描，即采用轮询的方法，效率较低。
+- 需要维护一个用来存放大量fd的数据结构，这样会使得用户空间和内核空间在传递该结构时复制开销大
 
 ### poll
 
 - int poll(struct pollfd *fds, nfds_t nfds, int timeout)
 - 可以通过指定timeout的值来决定是否阻塞（当timeout＜0时，会无限期阻塞；当timeout=0时，会立即返回）
+- 它没有最大连接数的限制，原因是它是基于链表来存储的
+- 大量的fd的数组被整体复制于用户态和内核地址空间之间
+- poll还有一个特点是“水平触发”，如果报告了fd后，没有被处理，那么下次poll时会再次报告该fd
 
 ### epoll
 
 - epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout)
 - 可以通过指定timeout来指定该调用是否阻塞（当timeout=-1时，会无限期阻塞；当timeout=0时，会立即返回；>-时，阻塞T毫秒）
+- epoll使用一个文件描述符管理多个描述符，将用户关系的文件描述符的事件存放到内核的一个事件表中，这样在用户空间和内核空间的copy只需一次
+- 没有最大并发连接的限制，能打开的FD的上限远大于1024（1G的内存上能监听约10万个端口）
+- 效率提升，不是轮询的方式，不会随着FD数目的增加效率下降
+- 内存拷贝，利用mmap()文件映射内存加速与内核空间的消息传递；即epoll使用mmap减少复制开销
+- epoll对文件描述符的操作有两种模式：水平触发（level trigger）和 边缘触发（edge trigger）
+
+#### 水平触发
+
+- 当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序可以不立即处理该事件。下次调用epoll_wait时，会再次响应应用程序并通知此事件。
+- 同时支持block和no-block socket
+
+#### 边缘触发
+
+- 当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序必须立即处理该事件。如果不处理，下次调用epoll_wait时，不会再次响应应用程序并通知此事件。
+- 只支持no-block socket
+
+### Finally
+
+- 表面上看epoll的性能最好，但是在连接数少并且连接都十分活跃的情况下，select和poll的性能可能比epoll好，毕竟epoll的通知机制需要很多函数回调。
+- select低效是因为每次它都需要轮询。但低效也是相对的，视情况而定，也可通过良好的设计改善。
