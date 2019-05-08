@@ -210,6 +210,20 @@ func (b *BinaryTree) PostOrderTraversal(root *TreeNode) {
 	fmt.Println(root.Value)
 }
 
+// LevelTraversal 广度遍历(层序遍历)
+func (b *BinaryTree) LevelTraversal(root *TreeNode) {
+	if root == nil {
+		return
+	}
+	if root.LeftChildNode != nil {
+		b.InOrderTraversal(root.LeftChildNode)
+	}
+	if root.RightChildNode != nil {
+		b.InOrderTraversal(root.RightChildNode)
+	}
+	fmt.Println(root.Value)
+}
+
 // BFS Recursion
 // LevelOrderTraversal Traversal
 // from top to bottom, left to right
