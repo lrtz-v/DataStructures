@@ -45,10 +45,16 @@ func (heap *MaxHeap) bubbleUp(k int) {
 	}
 }
 
+func (heap *MaxHeap) min(a, b int) int {
+	if heap.Heap[a].Value > heap.Heap[b].Value {
+		return b
+	}
+	return a
+}
+
 func (heap *MaxHeap) bubbleDown(k int) {
 	min := k
 	left := left(k)
-
 	for i := 0; i < 2; i++ {
 		if (left + i) <= heap.size-1 {
 			if heap.Heap[left+i].Value > heap.Heap[min].Value {

@@ -1,4 +1,4 @@
-package queue
+package Queue
 
 import "errors"
 
@@ -20,7 +20,8 @@ func NewQueue() *Queue {
 	return &Queue{Length: 0}
 }
 
-func (q *Queue) push(value interface{}) {
+// Push add an element to queue
+func (q *Queue) Push(value interface{}) {
 	newNode := &node{Value: value}
 	if q.Length == 0 {
 		q.Head = newNode
@@ -37,7 +38,8 @@ func (q *Queue) push(value interface{}) {
 	q.Length++
 }
 
-func (q *Queue) pop() (interface{}, error) {
+// Pop get an element from queue
+func (q *Queue) Pop() (interface{}, error) {
 	if q.Length == 0 {
 		return nil, errors.New("Empty Queue")
 	}
@@ -59,4 +61,9 @@ func (q *Queue) decrease() {
 
 func (q *Queue) size() int {
 	return q.Length
+}
+
+// Empty isEmpty
+func (q *Queue) Empty() bool {
+	return q.Length == 0
 }

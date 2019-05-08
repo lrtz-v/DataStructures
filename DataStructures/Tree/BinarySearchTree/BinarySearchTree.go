@@ -2,6 +2,8 @@ package BinarySearchTree
 
 import (
 	"fmt"
+
+	"github.com/DataStructures/DataStructures/Queue"
 )
 
 /*	Binary Tree
@@ -211,51 +213,39 @@ func (b *BinaryTree) PostOrderTraversal(root *TreeNode) {
 }
 
 // LevelTraversal 广度遍历(层序遍历)
-func (b *BinaryTree) LevelTraversal(root *TreeNode) {
-	if root == nil {
+func (b *BinaryTree) LevelTraversal() {
+	if b.Root == nil {
 		return
 	}
-	if root.LeftChildNode != nil {
-		b.InOrderTraversal(root.LeftChildNode)
-	}
-	if root.RightChildNode != nil {
-		b.InOrderTraversal(root.RightChildNode)
-	}
-	fmt.Println(root.Value)
-}
-
-// BFS Recursion
-// LevelOrderTraversal Traversal
-// from top to bottom, left to right
-func (b *BinaryTree) LevelOrderTraversal(root *TreeNode, call func()) {
-	if root == nil {
-		return
-	}
-	var nodedQueue []*TreeNode
-	nodedQueue = append(nodedQueue, root)
-	for len(nodedQueue) > 0 {
-		currentNode := nodedQueue[0]
-		call()
-		if currentNode.LeftChildNode != nil {
-			nodedQueue = append(nodedQueue, currentNode.LeftChildNode)
+	queue := Queue.NewQueue()
+	queue.Push(b.Root)
+	for !queue.Empty() {
+		val, err := queue.Pop()
+		if err != nil {
+			continue
 		}
-		if currentNode.RightChildNode != nil {
-			nodedQueue = append(nodedQueue, currentNode.RightChildNode)
+		node := val.(*TreeNode)
+		fmt.Println(node.Value)
+		if node.LeftChildNode != nil {
+			queue.Push(node.LeftChildNode)
 		}
-		nodedQueue = nodedQueue[1:]
+		if node.RightChildNode != nil {
+			queue.Push(node.RightChildNode)
+		}
 	}
 }
 
-// CountNodes count nodes
-func (b *BinaryTree) CountNodes() int64 {
-
-	var count int64
-	count = 0
-
-	b.LevelOrderTraversal(b.Root, func() {
-		count += 1
-	})
-	return count
+// LevelTraversalRecursion 广度遍历(层序遍历) Recursion
+func (b *BinaryTree) LevelTraversalRecursion(root *TreeNode, level int) {
+	if root == nil {
+		return
+	}
+	if level == 1 {
+		fmt.Println(root.Value)
+	} else if level > 1 {
+		b.LevelTraversalRecursion(root.LeftChildNode, level-1)
+		b.LevelTraversalRecursion(root.RightChildNode, level-1)
+	}
 }
 
 // GetMax get max node
@@ -319,7 +309,7 @@ func (b *BinaryTree) IsInTree(value int) bool {
 func (b *BinaryTree) GetDepth(node *TreeNode) int {
 	level := 1
 	for node.ParentNode != nil {
-		level += 1
+		level++
 		node = node.ParentNode
 	}
 	return level

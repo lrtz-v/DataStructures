@@ -1,4 +1,4 @@
-package queue
+package Queue
 
 import (
 	"fmt"
@@ -13,7 +13,7 @@ func TestQueue(t *testing.T) {
 	// testData := []int{4, 2, 7, 1, 3, 6, 9}
 	queue := NewQueue()
 	for _, data := range testData {
-		queue.push(data)
+		queue.Push(data)
 	}
 
 	if size := queue.size(); size != len(testData) {
@@ -21,7 +21,7 @@ func TestQueue(t *testing.T) {
 	}
 
 	for _, data := range testData {
-		val, err := queue.pop()
+		val, err := queue.Pop()
 		fmt.Print(val)
 		if err != nil {
 			t.Error("pop err")
