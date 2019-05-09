@@ -1,51 +1,93 @@
 package quik
 
 import (
-	"fmt"
+	"github.com/DataStructures/DataStructures/Stack"
 )
 
-// 快速排序
+/*
+快速排序
+每一轮挑选一个基准元素，并让其他比它大的元素移动到数列的一边，比它小的元素移动到数列的另一边
+从而把数列拆分成两个部分
+平均时间复杂度：O(nlogn), 最差：O(n^2)
+*/
 
-// 特点
-//
+// partition 双边循环 递归
+func partition(arr []int, startIndex, endIndex int) int {
+	pivot := arr[startIndex]
+	left := startIndex
+	right := endIndex
 
-type quikSort struct {
-	comparableList []int
-	auk            []int
-}
+	for left != right {
+		for left < right && arr[right] > pivot {
+			right--
+		}
+		for left < right && arr[left] <= pivot {
+			left++
+		}
 
-func (s *quikSort) isSorted() bool {
-	for i := 1; i < len(s.comparableList); i++ {
-		if s.less(s.comparableList[i], s.comparableList[i-1]) {
-			return false
+		if left < right {
+			arr[left], arr[right] = arr[right], arr[left]
 		}
 	}
-	return true
+
+	// left == right
+	arr[startIndex], arr[left] = arr[left], arr[startIndex]
+	return left
 }
 
-func (s *quikSort) less(a, b int) bool {
-	return a < b
+// 单边循环
+func partitionV2(arr []int, startIndex, endIndex int) int {
+	pivot := arr[startIndex]
+	mark := startIndex
+
+	for i := startIndex + 1; i <= endIndex; i++ {
+		if arr[i] < pivot {
+			mark++
+			arr[mark], arr[i] = arr[i], arr[mark]
+		}
+	}
+
+	arr[startIndex], arr[mark] = arr[mark], arr[startIndex]
+	return mark
 }
 
-func (s *quikSort) sort(lo, hi int) {
-	if hi <= lo {
+func quickSort(arr []int, startIndex, endIndex int) {
+	if startIndex >= endIndex {
 		return
 	}
-	mid := lo + (hi-lo)/2
-	s.sort(lo, mid)
-	s.sort(mid+1, hi)
+	pivotIndex := partitionV2(arr, startIndex, endIndex)
+	quickSort(arr, startIndex, pivotIndex-1)
+	quickSort(arr, pivotIndex+1, endIndex)
 }
 
-func (s *quikSort) show() {
-	fmt.Println("Final Arr: ")
-	for i := 0; i < len(s.comparableList); i++ {
-		fmt.Println(s.comparableList[i])
-	}
-}
+// quickSort2 使用栈代替递归
+func quickSort2(arr []int, startIndex, endIndex int) {
+	stack := Stack.NewStack()
+	rootParam := make(map[string]int)
+	rootParam["startIndex"] = startIndex
+	rootParam["endIndex"] = endIndex
+	stack.Push(rootParam)
 
-func min(x, y int) int {
-	if x > y {
-		return y
+	for !stack.Empty() {
+		data, err := stack.Pop()
+		if err != nil {
+			panic("Pop Error")
+		}
+		param := data.(map[string]int)
+		pivotIndex := partitionV2(arr, param["startIndex"], param["endIndex"])
+
+		if param["startIndex"] < pivotIndex-1 {
+			leftParam := make(map[string]int)
+			leftParam["startIndex"] = param["startIndex"]
+			leftParam["endIndex"] = pivotIndex - 1
+			stack.Push(leftParam)
+		}
+
+		if pivotIndex+1 < param["endIndex"] {
+			rightParam := make(map[string]int)
+			rightParam["startIndex"] = pivotIndex + 1
+			rightParam["endIndex"] = param["endIndex"]
+			stack.Push(rightParam)
+		}
 	}
-	return x
 }
