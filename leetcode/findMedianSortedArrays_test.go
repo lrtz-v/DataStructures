@@ -1,4 +1,4 @@
-package findMedianSortedArrays
+package leetcode
 
 import (
 	"testing"

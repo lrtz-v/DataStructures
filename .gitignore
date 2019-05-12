@@ -85,7 +85,7 @@ dump.rdb
 .projectile
 
  # vscode
-  .vscode
+.vscode/
 
-  *.iml
+*.iml
 

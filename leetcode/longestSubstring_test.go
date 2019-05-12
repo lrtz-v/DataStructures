@@ -1,4 +1,4 @@
-package longestSubstring
+package leetcode
 
 import (
 	"testing"

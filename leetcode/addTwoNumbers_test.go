@@ -1,4 +1,4 @@
-package addTwoNumbers
+package leetcode
 
 import (
 	"fmt"
