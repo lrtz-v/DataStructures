@@ -1,33 +1,19 @@
 
-- ### Comes from https://github.com/jwasham/google-interview-university.git
+# LinkedList
 
-- ### 链表（Linked Lists）
-    - [ ] 介绍：
-        - [ ] [单向链表（视频）](https://www.coursera.org/learn/data-structures/lecture/kHhgK/singly-linked-lists)
-        - [ ] [CS 61B —— 链表（视频）](https://www.youtube.com/watch?v=sJtJOtXCW_M&list=PL-XXv-cvA_iAlnI-BQr9hjqADPBtujFJd&index=5)
-    - [ ] [C 代码（视频）](https://www.youtube.com/watch?v=QN6FPiD0Gzo)
-        - 并非看完整个视频，只需要看关于节点结果和内存分配那一部分即可
-    - [ ] 链表 vs 数组：
-        - [基本链表 Vs 数组（视频）](https://www.coursera.org/learn/data-structures-optimizing-performance/lecture/rjBs9/core-linked-lists-vs-arrays)
-        - [在现实中，链表 Vs 数组（视频）](https://www.coursera.org/learn/data-structures-optimizing-performance/lecture/QUaUd/in-the-real-world-lists-vs-arrays)
-    - [ ] [为什么你需要避免使用链表（视频）](https://www.youtube.com/watch?v=YQs6IC-vgmo)
-    - [ ] 的确：你需要关于“指向指针的指针”的相关知识：（因为当你传递一个指针到一个函数时，该函数可能会改变指针所指向的地址）该页只是为了让你了解“指向指针的指针”这一概念。但我并不推荐这种链式遍历的风格。因为，这种风格的代码，其可读性和可维护性太低。
-        - [指向指针的指针](https://www.eskimo.com/~scs/cclass/int/sx8.html)
-    - [ ] 实现（我实现了使用尾指针以及没有使用尾指针这两种情况）
-        - [ ] size() —— 返回链表中数据元素的个数
-        - [ ] empty() —— 若链表为空则返回一个布尔值 true
-        - [ ] value_at(index) —— 返回第 n 个元素的值（从0开始计算）
-        - [ ] push_front(value) —— 添加元素到链表的首部
-        - [ ] pop_front() —— 删除首部元素并返回其值
-        - [ ] push_back(value) —— 添加元素到链表的尾部
-        - [ ] pop_back() —— 删除尾部元素并返回其值
-        - [ ] front() —— 返回首部元素的值
-        - [ ] back() —— 返回尾部元素的值
-        - [ ] insert(index, value) —— 插入值到指定的索引，并把当前索引的元素指向到新的元素
-        - [ ] erase(index) —— 删除指定索引的节点
-        - [ ] value_n_from_end(n) —— 返回倒数第 n 个节点的值
-        - [ ] reverse() —— 逆序链表
-        - [ ] remove_value(value) —— 删除链表中指定值的第一个元素
-    - [ ] 双向链表
-        - [介绍（视频）](https://www.coursera.org/learn/data-structures/lecture/jpGKD/doubly-linked-lists)
-        - 并不需要实现
+## 拓展
+
+### 判断是否有环
+
+- 一个指针步进为1，另一个步进为2，步进为1的指针为P1， 步进为2的指针为P2
+- 数学追及：从Head开始便利，当P1==P2，即有环
+
+### 判断环的长度
+
+- 当两个指针再次相遇时，P1前进的步数即为环的长度
+
+### 找出入环点
+
+- HEAD到入环点的距离为D，入环点到的第一次相遇的点距离为S1，第一次相遇到入环点的距离为S2
+- 当的第一次相遇时，距离S(P1)=D+S1, 距离S(P2)=D+2*S1+S2
+- 仅为步长可的: 2(S(P1))=S(P2) ==> 2*(D+S1)=D+2*S1+S2  ==> D=S2
