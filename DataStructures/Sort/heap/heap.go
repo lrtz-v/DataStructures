@@ -1,5 +1,10 @@
 package heapSort
 
+/*
+堆排序
+时间复杂度：O(1) - O(nlogn)
+*/
+
 func max(array []int, indexA, indexB int) int {
 	if array[indexA] >= array[indexB] {
 		return indexA

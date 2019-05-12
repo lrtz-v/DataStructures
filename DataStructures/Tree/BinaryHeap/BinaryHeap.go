@@ -2,6 +2,11 @@ package BinaryHeap
 
 import "fmt"
 
+/*
+二叉堆
+构建时间复杂度：O(n)
+*/
+
 // BinaryHeap 最大二叉堆
 type BinaryHeap struct {
 	heap []int
