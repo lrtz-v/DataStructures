@@ -16,10 +16,10 @@ var DisplayLength = 132
 
 // TreeNode --> node
 type TreeNode struct {
-	Value          int
-	ParentNode     *TreeNode
-	LeftChildNode  *TreeNode
-	RightChildNode *TreeNode
+	Value      int
+	ParentNode *TreeNode
+	Left       *TreeNode
+	Right      *TreeNode
 }
 
 // NewNode is a function for creating a new node
@@ -53,20 +53,20 @@ func (b *BinaryTree) Insert(value int) {
 	ParentNode := b.Root
 	for {
 		if temNode.BigThan(ParentNode) {
-			if ParentNode.RightChildNode == nil {
-				ParentNode.RightChildNode = temNode
+			if ParentNode.Right == nil {
+				ParentNode.Right = temNode
 				temNode.ParentNode = ParentNode
 				return
 			}
-			ParentNode = ParentNode.RightChildNode
+			ParentNode = ParentNode.Right
 			continue
 		} else {
-			if ParentNode.LeftChildNode == nil {
-				ParentNode.LeftChildNode = temNode
+			if ParentNode.Left == nil {
+				ParentNode.Left = temNode
 				temNode.ParentNode = ParentNode
 				return
 			}
-			ParentNode = ParentNode.LeftChildNode
+			ParentNode = ParentNode.Left
 			continue
 		}
 	}
@@ -82,16 +82,16 @@ func (b *BinaryTree) Search(value int) *TreeNode {
 			return ParentNode
 		}
 		if temNode.BigThan(ParentNode) {
-			if ParentNode.RightChildNode != nil {
-				ParentNode = ParentNode.RightChildNode
+			if ParentNode.Right != nil {
+				ParentNode = ParentNode.Right
 			}
 		} else {
-			if ParentNode.LeftChildNode != nil {
-				ParentNode = ParentNode.LeftChildNode
+			if ParentNode.Left != nil {
+				ParentNode = ParentNode.Left
 			}
 		}
 
-		if ParentNode.LeftChildNode == nil && ParentNode.RightChildNode == nil {
+		if ParentNode.Left == nil && ParentNode.Right == nil {
 			break
 		}
 	}
@@ -111,49 +111,49 @@ func (b *BinaryTree) Delete(value int) {
 	AimNode := b.Search(value)
 	AimParentNode := AimNode.ParentNode
 
-	if AimNode.LeftChildNode == nil && AimNode.RightChildNode == nil {
-		if AimParentNode != nil && AimParentNode.LeftChildNode == AimNode {
-			AimParentNode.LeftChildNode = nil
+	if AimNode.Left == nil && AimNode.Right == nil {
+		if AimParentNode != nil && AimParentNode.Left == AimNode {
+			AimParentNode.Left = nil
 		} else {
-			AimParentNode.RightChildNode = nil
+			AimParentNode.Right = nil
 		}
-	} else if AimNode.LeftChildNode == nil || AimNode.RightChildNode == nil {
-		SingleChildNode := AimNode.LeftChildNode
-		if AimNode.RightChildNode != nil {
-			SingleChildNode = AimNode.RightChildNode
+	} else if AimNode.Left == nil || AimNode.Right == nil {
+		SingleChildNode := AimNode.Left
+		if AimNode.Right != nil {
+			SingleChildNode = AimNode.Right
 		}
-		if AimParentNode != nil && AimParentNode.LeftChildNode == AimNode {
-			AimParentNode.LeftChildNode = SingleChildNode
+		if AimParentNode != nil && AimParentNode.Left == AimNode {
+			AimParentNode.Left = SingleChildNode
 		} else {
-			AimParentNode.RightChildNode = SingleChildNode
+			AimParentNode.Right = SingleChildNode
 		}
 	} else {
 		// 查询左子树的最大数 / 右子树的最小值
-		if AimNode.LeftChildNode.RightChildNode != nil {
-			subNode := AimNode.LeftChildNode
-			for subNode.RightChildNode != nil {
-				subNode = subNode.RightChildNode
+		if AimNode.Left.Right != nil {
+			subNode := AimNode.Left
+			for subNode.Right != nil {
+				subNode = subNode.Right
 			}
 			// 交换值
 			AimNode.Value = subNode.Value
 			// 删除subNode
-			if subNode.LeftChildNode == nil {
-				subNode.ParentNode.RightChildNode = nil
+			if subNode.Left == nil {
+				subNode.ParentNode.Right = nil
 			} else {
-				subNode.ParentNode.RightChildNode = subNode.LeftChildNode
+				subNode.ParentNode.Right = subNode.Left
 			}
-		} else if AimNode.RightChildNode.LeftChildNode != nil {
-			subNode := AimNode.RightChildNode
-			for subNode.LeftChildNode != nil {
-				subNode = subNode.LeftChildNode
+		} else if AimNode.Right.Left != nil {
+			subNode := AimNode.Right
+			for subNode.Left != nil {
+				subNode = subNode.Left
 			}
 			// 交换值
 			AimNode.Value = subNode.Value
 			// 删除subNode
-			if subNode.RightChildNode == nil {
-				subNode.ParentNode.LeftChildNode = nil
+			if subNode.Right == nil {
+				subNode.ParentNode.Left = nil
 			} else {
-				subNode.ParentNode.LeftChildNode = subNode.RightChildNode
+				subNode.ParentNode.Left = subNode.Right
 			}
 		}
 	}
@@ -172,11 +172,11 @@ func (b *BinaryTree) PreOrderTraversal(root *TreeNode) {
 		return
 	}
 	fmt.Println(root.Value)
-	if root.LeftChildNode != nil {
-		b.PreOrderTraversal(root.LeftChildNode)
+	if root.Left != nil {
+		b.PreOrderTraversal(root.Left)
 	}
-	if root.RightChildNode != nil {
-		b.PreOrderTraversal(root.RightChildNode)
+	if root.Right != nil {
+		b.PreOrderTraversal(root.Right)
 	}
 }
 
@@ -187,12 +187,12 @@ func (b *BinaryTree) InOrderTraversal(root *TreeNode) {
 	if root == nil {
 		return
 	}
-	if root.LeftChildNode != nil {
-		b.InOrderTraversal(root.LeftChildNode)
+	if root.Left != nil {
+		b.InOrderTraversal(root.Left)
 	}
 	fmt.Println(root.Value)
-	if root.RightChildNode != nil {
-		b.InOrderTraversal(root.RightChildNode)
+	if root.Right != nil {
+		b.InOrderTraversal(root.Right)
 	}
 }
 
@@ -203,11 +203,11 @@ func (b *BinaryTree) PostOrderTraversal(root *TreeNode) {
 	if root == nil {
 		return
 	}
-	if root.LeftChildNode != nil {
-		b.InOrderTraversal(root.LeftChildNode)
+	if root.Left != nil {
+		b.InOrderTraversal(root.Left)
 	}
-	if root.RightChildNode != nil {
-		b.InOrderTraversal(root.RightChildNode)
+	if root.Right != nil {
+		b.InOrderTraversal(root.Right)
 	}
 	fmt.Println(root.Value)
 }
@@ -226,11 +226,11 @@ func (b *BinaryTree) LevelTraversal() {
 		}
 		node := val.(*TreeNode)
 		fmt.Println(node.Value)
-		if node.LeftChildNode != nil {
-			queue.Push(node.LeftChildNode)
+		if node.Left != nil {
+			queue.Push(node.Left)
 		}
-		if node.RightChildNode != nil {
-			queue.Push(node.RightChildNode)
+		if node.Right != nil {
+			queue.Push(node.Right)
 		}
 	}
 }
@@ -243,8 +243,8 @@ func (b *BinaryTree) LevelTraversalRecursion(root *TreeNode, level int) {
 	if level == 1 {
 		fmt.Println(root.Value)
 	} else if level > 1 {
-		b.LevelTraversalRecursion(root.LeftChildNode, level-1)
-		b.LevelTraversalRecursion(root.RightChildNode, level-1)
+		b.LevelTraversalRecursion(root.Left, level-1)
+		b.LevelTraversalRecursion(root.Right, level-1)
 	}
 }
 
@@ -258,8 +258,8 @@ func (b *BinaryTree) GetMax() int {
 
 	MaxValue = node.Value
 
-	for node.RightChildNode != nil {
-		node = node.RightChildNode
+	for node.Right != nil {
+		node = node.Right
 		MaxValue = node.Value
 	}
 	return MaxValue
@@ -276,8 +276,8 @@ func (b *BinaryTree) GetMin() int {
 
 	MinValue = node.Value
 
-	for node.LeftChildNode != nil {
-		node = node.LeftChildNode
+	for node.Left != nil {
+		node = node.Left
 		MinValue = node.Value
 	}
 	return MinValue
@@ -287,10 +287,10 @@ func (b *BinaryTree) GetMin() int {
 func (b *BinaryTree) GetSuccessor(value int) int {
 	// 返回给定值的后继者，若没有则返回-1
 	AimNode := b.Search(value)
-	if AimNode.RightChildNode != nil {
-		return AimNode.RightChildNode.Value
-	} else if AimNode.LeftChildNode != nil {
-		return AimNode.LeftChildNode.Value
+	if AimNode.Right != nil {
+		return AimNode.Right.Value
+	} else if AimNode.Left != nil {
+		return AimNode.Left.Value
 	} else {
 		return -1
 	}
@@ -328,7 +328,7 @@ func (b *BinaryTree) GetHight(node *TreeNode) int {
 	if node == nil {
 		return 0
 	}
-	return Max(b.GetHight(node.LeftChildNode), b.GetHight(node.RightChildNode)) + 1
+	return Max(b.GetHight(node.Left), b.GetHight(node.Right)) + 1
 }
 
 // Revert a BinaryTree
@@ -337,13 +337,42 @@ func (b *BinaryTree) Revert(root *TreeNode) {
 		return
 	}
 	tmp := &TreeNode{}
-	tmp = root.LeftChildNode
-	root.LeftChildNode = root.RightChildNode
-	root.RightChildNode = tmp
-	if root.LeftChildNode != nil {
-		b.Revert(root.LeftChildNode)
+	tmp = root.Left
+	root.Left = root.Right
+	root.Right = tmp
+	if root.Left != nil {
+		b.Revert(root.Left)
 	}
-	if root.RightChildNode != nil {
-		b.Revert(root.RightChildNode)
+	if root.Right != nil {
+		b.Revert(root.Right)
 	}
+}
+
+/**
+ * Definition for a binary tree node.
+ 在一个 m*n 的二维字符串数组中输出二叉树，并遵守以下规则：
+
+行数 m 应当等于给定二叉树的高度。
+列数 n 应当总是奇数。
+根节点的值（以字符串格式给出）应当放在可放置的第一行正中间。根节点所在的行与列会将剩余空间划分为两部分（左下部分和右下部分）。你应该将左子树输出在左下部分，右子树输出在右下部分。左下和右下部分应当有相同的大小。即使一个子树为空而另一个非空，你不需要为空的子树输出任何东西，但仍需要为另一个子树留出足够的空间。然而，如果两个子树都为空则不需要为它们留出任何空间。
+每个未使用的空间应包含一个空的字符串""。
+使用相同的规则输出子树。
+二叉树的高度在范围 [1, 10] 中。
+
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+*/
+func PrintTree(root *TreeNode) [][]string {
+	data := make([][]string, 10)
+	level := 0
+	nodeList := []*TreeNode{root}
+
+	for level < 10 {
+		eleNum := slot + 2 ^ level
+	}
+
+	return data[0:level]
 }

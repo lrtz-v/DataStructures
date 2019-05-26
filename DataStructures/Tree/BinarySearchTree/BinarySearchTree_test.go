@@ -36,7 +36,7 @@ func TestBinaryTreeLevelRevert(t *testing.T) {
 }
 
 func TestBinaryTreeLevelRevert2(t *testing.T) {
-	// t.Skip()
+	t.Skip()
 	testData := []int{4, 2, 7, 1, 3, 6, 9}
 	BinaryTree := NewBinaryTree()
 	for _, data := range testData {
@@ -49,4 +49,17 @@ func TestBinaryTreeLevelRevert2(t *testing.T) {
 		BinaryTree.LevelTraversalRecursion(BinaryTree.Root, i)
 	}
 	BinaryTree.Clear()
+}
+
+func TestPrintTree(t *testing.T) {
+	testData := []int{4, 2, 7, 1, 3, 6, 9}
+	BinaryTree := NewBinaryTree()
+	for _, data := range testData {
+		BinaryTree.Insert(data)
+	}
+	data := PrintTree(BinaryTree.Root)
+	for _, i := range data {
+		fmt.Println(i)
+	}
+	fmt.Println()
 }
