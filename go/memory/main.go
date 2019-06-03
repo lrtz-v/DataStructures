@@ -2,6 +2,10 @@ package main
 
 import "fmt"
 
+func Round(n, a uintptr) uintptr {
+	return (n + a - 1) &^ (a - 1)
+}
+
 func test() *int {
 	x := new(int)
 	*x = 0xAABB
