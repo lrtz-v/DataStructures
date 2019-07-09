@@ -22,3 +22,10 @@
 - R: miss
 - T: miss
 - S: miss
+
+## 2019/07/01 - 2019/07/07
+
+- A: miss
+- R: miss
+- T: miss
+- S: miss
