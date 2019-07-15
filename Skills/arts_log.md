@@ -29,3 +29,10 @@
 - R: miss
 - T: miss
 - S: miss
+
+## 2019/07/08 - 2019/07/014
+
+- A: find-peak-element
+- R: miss
+- T: miss
+- S: miss
