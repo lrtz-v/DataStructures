@@ -30,9 +30,23 @@
 - T: miss
 - S: miss
 
-## 2019/07/08 - 2019/07/014
+## 2019/07/08 - 2019/07/14
 
 - A: find-peak-element
 - R: miss
 - T: miss
 - S: miss
+
+## 2019/07/15 - 2019/07/21
+
+- A: [climbing-stairs](https://leetcode-cn.com/problems/climbing-stairs/submissions/)
+- R: JS runtime
+- T: String Search
+- S: miss
+
+## 2019/07/22 - 2019/07/28
+
+- A: [triples-with-bitwise-and-equal-to-zero](https://leetcode-cn.com/problems/triples-with-bitwise-and-equal-to-zero/)
+- R: 
+- T: 
+- S: 
