@@ -47,6 +47,7 @@
 ## 2019/07/22 - 2019/07/28
 
 - A: [triples-with-bitwise-and-equal-to-zero](https://leetcode-cn.com/problems/triples-with-bitwise-and-equal-to-zero/)
-- R: 
-- T: 
-- S: 
+- A: [length-of-longest-fibonacci-subsequence](https://leetcode-cn.com/problems/length-of-longest-fibonacci-subsequence/submissions/)
+- R: [Docker](https://towardsdatascience.com/learn-enough-docker-to-be-useful-b7ba70caeb4b)
+- T: Docker multi build
+- S: miss
