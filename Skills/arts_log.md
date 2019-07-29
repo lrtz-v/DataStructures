@@ -51,3 +51,10 @@
 - R: [Docker](https://towardsdatascience.com/learn-enough-docker-to-be-useful-b7ba70caeb4b)
 - T: Docker multi build
 - S: miss
+
+## 2019/07/29 - 2019/08/04
+
+- A: [go_makefile](https://sohlich.github.io/post/go_makefile/)
+- R: 
+- T: golang Makefile
+- S: miss
