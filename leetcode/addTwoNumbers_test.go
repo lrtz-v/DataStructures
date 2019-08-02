@@ -1,7 +1,6 @@
 package leetcode
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -10,7 +9,7 @@ func TestCreateList(t *testing.T) {
 	// printNodeList(res)
 	for _, val := range []int{2, 4, 3} {
 		if val != res.Val {
-			fmt.Println(res.Val)
+			// fmt.Println(res.Val)
 			t.Errorf("Expect %d, Get %d\n", val, res.Val)
 		}
 		res = res.Next

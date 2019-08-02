@@ -17,9 +17,6 @@ Explanation: 342 + 465 = 807.
  *     Next *ListNode
  * }
 */
-import (
-	"fmt"
-)
 
 // ListNode node
 type ListNode struct {
@@ -186,8 +183,8 @@ func printNodeList(nodeList *ListNode) {
 		if tmpList == nil {
 			break
 		}
-		fmt.Printf("Val: %d\n", tmpList.Val)
+		// fmt.Printf("Val: %d\n", tmpList.Val)
 		tmpList = tmpList.Next
 	}
-	fmt.Println(".....")
+	// fmt.Println(".....")
 }
