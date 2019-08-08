@@ -1,7 +1,5 @@
 package leetcode
 
-import "fmt"
-
 /*
 	5座金矿，储量不同，需要人力也不同；10个工人；每座金矿需要人力如下：
 	500KG  5人
@@ -45,7 +43,7 @@ func getBestGildMining2(workerNum int, costList, goldsList []int) int {
 			if j >= costList[i-1] {
 				result[j] = max(result[j], result[j-costList[i-1]]+goldsList[i-1])
 			}
-			fmt.Println(result)
+			// fmt.Println(result)
 		}
 	}
 	return result[workerNum]
@@ -63,8 +61,8 @@ func showTable(table [][]int) {
 	cols := len(table[0])
 	for i := 0; i < rows; i++ {
 		for j := 0; j < cols; j++ {
-			fmt.Printf("%d\t", table[i][j])
+			// fmt.Printf("%d\t", table[i][j])
 		}
-		fmt.Println()
+		// fmt.Println()
 	}
 }
