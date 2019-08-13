@@ -69,7 +69,7 @@
 
 ## 2019/08/12 - 2019/08/18
 
-- A: 
-- R: 
+- A: mergeSort && selectSort
+- R: http://www.cs.yale.edu/homes/aspnes/classes/223/notes.html#dynamicProgramming
 - T: 
 - S: 
