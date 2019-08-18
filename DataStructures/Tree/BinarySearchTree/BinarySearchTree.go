@@ -128,33 +128,18 @@ func (b *BinaryTree) Delete(value int) {
 			AimParentNode.Right = SingleChildNode
 		}
 	} else {
-		// 查询左子树的最大数 / 右子树的最小值
-		if AimNode.Left.Right != nil {
-			subNode := AimNode.Left
-			for subNode.Right != nil {
-				subNode = subNode.Right
-			}
-			// 交换值
-			AimNode.Value = subNode.Value
-			// 删除subNode
-			if subNode.Left == nil {
-				subNode.ParentNode.Right = nil
-			} else {
-				subNode.ParentNode.Right = subNode.Left
-			}
-		} else if AimNode.Right.Left != nil {
-			subNode := AimNode.Right
-			for subNode.Left != nil {
-				subNode = subNode.Left
-			}
-			// 交换值
-			AimNode.Value = subNode.Value
-			// 删除subNode
-			if subNode.Right == nil {
-				subNode.ParentNode.Left = nil
-			} else {
-				subNode.ParentNode.Left = subNode.Right
-			}
+		// 查询右子树的最小值
+		subNode := AimNode.Right
+		for subNode.Left != nil {
+			subNode = subNode.Left
+		}
+		// 交换值
+		AimNode.Value = subNode.Value
+		// 删除subNode
+		if subNode.Right == nil {
+			subNode.ParentNode.Left = nil
+		} else {
+			subNode.ParentNode.Left = subNode.Right
 		}
 	}
 }
