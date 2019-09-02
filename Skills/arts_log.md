@@ -63,6 +63,20 @@
 ## 2019/08/05 - 2019/08/11
 
 - A: [leastInterval]
-- R: Wireshark数据包分析实战 -- 常见网络高层协议
+- R: Wireshark数据包分析实战
 - T: 
-- S: miss
+- S: 
+
+## 2019/08/12 - 2019/08/18
+
+- A: 
+- R: [Tree]http://www.cs.yale.edu/homes/aspnes/classes/223/notes.html
+- T: mvn deploy
+- S: 
+
+## 2019/08/19 - 2019/08/25
+
+- A: 
+- R: 
+- T: 
+- S: 
