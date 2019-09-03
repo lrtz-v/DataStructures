@@ -76,7 +76,21 @@
 
 ## 2019/08/19 - 2019/08/25
 
+- A: go hiking
+- R: go hiking
+- T: go hiking
+- S: go hiking
+
+## 2019/08/26 - 2019/09/01
+
+- A: go hiking
+- R: go hiking
+- T: go hiking
+- S: go hiking
+
+## 2019/09/02 - 2019/09/09
+
 - A: 
-- R: 
+- R: graph
 - T: 
 - S: 
