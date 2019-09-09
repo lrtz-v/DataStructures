@@ -8,6 +8,6 @@
 - [Simple Factory](./Creational/simplefactory.go)
 - [Factory Method](./Creational/factorymethod.go)
 - [Abstract Factory](./Creational/abstractfactory.go)
-- [Builder]
+- [Builder](./Creational/builder.go)
 - [Prototype]
 - [Singleton]
