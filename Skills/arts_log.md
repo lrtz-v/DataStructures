@@ -90,7 +90,7 @@
 
 ## 2019/09/02 - 2019/09/09
 
-- A: 
+- A: minSubArrayLen 
 - R: graph
 - T: 
 - S: 
