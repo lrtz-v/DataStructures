@@ -88,9 +88,16 @@
 - T: go hiking
 - S: go hiking
 
-## 2019/09/02 - 2019/09/09
+## 2019/09/02 - 2019/09/08
 
 - A: minSubArrayLen 
 - R: graph
+- T: 
+- S: 
+
+## 2019/09/09 - 2019/09/15
+
+- A: minPathSum 
+- R: design pattern
 - T: 
 - S: 
