@@ -8,12 +8,12 @@ const (
 	WineType DrinkType = 1 << iota
 	// CokeType coke
 	CokeType
-	// BeerType beer
-	BeerType
+	// SodaType beer
+	SodaType
 )
 
-// Drink interface
-type Drink interface {
+// Drinking interface
+type Drinking interface {
 	Drink() string
 }
 
@@ -33,23 +33,23 @@ func (*Coke) Drink() string {
 	return "Coke~~"
 }
 
-//Beer is one of API implement
-type Beer struct{}
+//Soda is one of API implement
+type Soda struct{}
 
 // Drink do drinking
-func (*Beer) Drink() string {
-	return "Beer~~"
+func (*Soda) Drink() string {
+	return "Soda~~"
 }
 
 // NewDrink new drink
-func NewDrink(drinkType DrinkType) Drink {
+func NewDrink(drinkType DrinkType) Drinking {
 	switch drinkType {
 	case WineType:
 		return &Wine{}
 	case CokeType:
 		return &Coke{}
-	case BeerType:
-		return &Beer{}
+	case SodaType:
+		return &Soda{}
 	default:
 		return &Coke{}
 	}

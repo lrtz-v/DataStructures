@@ -4,7 +4,7 @@ import "testing"
 
 func TestDrink(t *testing.T) {
 	beer := &MUSU{}
-	drink := NewDrink(beer)
+	drink := InitDrink(beer)
 	drink.Drink()
 	s := beer.GetResult()
 	if s != "Drink MUSU" {
@@ -14,7 +14,7 @@ func TestDrink(t *testing.T) {
 
 func TestDrink2(t *testing.T) {
 	beer := &QingDao{}
-	drink := NewDrink(beer)
+	drink := InitDrink(beer)
 	drink.Drink()
 	s := beer.GetResult()
 	if s != "Drink QingDao" {

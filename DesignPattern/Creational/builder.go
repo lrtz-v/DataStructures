@@ -10,8 +10,8 @@ type Drink struct {
 	beer Beer
 }
 
-// NewDrink init Drink
-func NewDrink(beer Beer) *Drink {
+// InitDrink init Drink
+func InitDrink(beer Beer) *Drink {
 	return &Drink{
 		beer: beer,
 	}
