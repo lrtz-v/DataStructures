@@ -1,16 +1,21 @@
 
 # Design Pattern
 
-## Creational Patterns
+## Creational
 
 - [Simple Factory](./Creational/simplefactory.go)
 - [Factory Method](./Creational/factorymethod.go)
-- [Abstract Factory](./Creational/abstractfactory.go)
 - [Builder](./Creational/builder.go)
 - [Prototype](./Creational/prototype.go)
 - [ObjectPool]./Creational/objectpool.go)
 - [Singleton](./Creational/singleton.go)
 
-## Structural Patterns
+## Structural
 
-- [Facade](./Structural/facade.go)
+- [Decorator](./Structural/decorator.go)
+- [Proxy](./Structural/proxy.go)
+
+## Behavioral
+
+- [Observer]
+- [Strategy]
