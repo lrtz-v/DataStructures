@@ -17,5 +17,14 @@
 
 ## Behavioral
 
-- [Observer]
-- [Strategy]
+- [Observer](./Behavioral/observer.go)
+- [Strategy](./Behavioral/strategy.go)
+
+## Synchronization
+
+- [Semaphore](./Synchronization/semaphore.go)
+
+## Concurrency
+
+- [Concurrency](./Concurrency/)
+
