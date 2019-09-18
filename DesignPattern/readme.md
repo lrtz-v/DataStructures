@@ -26,5 +26,11 @@
 
 ## Concurrency
 
-- [Concurrency](./Concurrency/)
+- [Bounded Parallelism](./Concurrency/boundedparallelism.go)
+- [Parallelism](./Concurrency/parallelism.go)
+- [Generator](./Concurrency/generator.go)
 
+## Messaging
+
+- [Fan-In](./Messaging/fanin.go)
+- [Fan-Out](./Messaging/fanout.go)
