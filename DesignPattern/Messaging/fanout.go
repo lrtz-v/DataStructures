@@ -1,30 +1,35 @@
 package messaging
 
-import "time"
+import "fmt"
 
-func Split(ch <-chan int, n int) []chan int {
+// Split elements into n chans
+func Split(ch <-chan int, n int) map[string]chan int {
 
-	cs := make([]chan int, n)
+	cs := make(map[string]chan int)
 	for i := 0; i < n; i++ {
-		cs = append(cs, make(chan int))
+		key := fmt.Sprintf("Chan Num_%d\n", i)
+		cs[key] = make(chan int)
 	}
 
-	close := func([]chan int) {
-		for _, c := range cs {
+	close := func(cs map[string]chan int) {
+		for key, c := range cs {
 			close(c)
+			fmt.Printf("[*] CLose %s\n", key)
 		}
 	}
 
-	go func(ch <-chan int, cs []chan int) {
+	go func(ch <-chan int, cs map[string]chan int) {
 		defer close(cs)
 
 		for {
 			for _, c := range cs {
 				select {
-				case val := <-ch:
+				case val, ok := <-ch:
+					if !ok {
+						return
+					}
 					c <- val
-				case <-time.After(1 * time.Second):
-					return
+					fmt.Printf("[*] Translate %d\n", val)
 				}
 			}
 		}

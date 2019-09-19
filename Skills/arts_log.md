@@ -101,3 +101,10 @@
 - R: design pattern
 - T: 
 - S: 
+
+## 2019/09/16 - 2019/09/22
+
+- A: 
+- R: design pattern
+- T: 
+- S: 
