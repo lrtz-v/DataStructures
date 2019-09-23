@@ -39,3 +39,11 @@
 ## Stability
 
 - [Circuit-Breaker](./Stability/circuitbreaker.go)
+
+## Profiling
+
+- [Timing Functions](./Profiling/timing.go)
+
+## Idioms
+
+- [Functional Options](./Idioms/functionaloptions.go)
