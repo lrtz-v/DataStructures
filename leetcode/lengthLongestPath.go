@@ -1,12 +1,12 @@
 package leetcode
 
 func lengthLongestPath(input string) int {
-	var dirc []string
 	maxLength := 0
+	// var dirc []string
 
-	for index, letter := range input {
+	// for index, letter := range input {
 
-	}
+	// }
 
 	return maxLength
 }
