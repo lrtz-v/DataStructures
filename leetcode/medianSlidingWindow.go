@@ -45,3 +45,23 @@ func calMid(nums []int, k int) float64 {
 	}
 	return float64(n1+n2) / 2
 }
+
+func medianSlidingWindow2(nums []int, k int) []float64 {
+	medianSlice := []float64{}
+
+	getMedian := func(tmp []int) float64 {
+		sort.Ints(tmp)
+		l := len(tmp)
+		if l%2 == 0 {
+			return (float64)(tmp[l/2]+tmp[l/2-1]) / 2
+		}
+		return float64(tmp[l/2])
+	}
+
+	for index := 0; index <= len(nums)-k; index++ {
+		tmp := make([]int, k)
+		copy(tmp, nums[index:index+k])
+		medianSlice = append(medianSlice, getMedian(tmp))
+	}
+	return medianSlice
+}
