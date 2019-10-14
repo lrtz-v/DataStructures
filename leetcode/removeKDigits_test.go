@@ -5,7 +5,7 @@ import (
 )
 
 func TestRemoveKDigits(t *testing.T) {
-	// t.Skip()
+	t.Skip()
 	testArr := "541270936"
 	res := removeKDigits(testArr, 1)
 	if res != "41270936" {
@@ -14,7 +14,7 @@ func TestRemoveKDigits(t *testing.T) {
 }
 
 func TestRemoveKDigits2(t *testing.T) {
-	//t.Skip()
+	t.Skip()
 	testArr := "1593212"
 	res := removeKDigits(testArr, 3)
 	if res != "1212" {
@@ -23,7 +23,7 @@ func TestRemoveKDigits2(t *testing.T) {
 }
 
 func TestRemoveKDigits3(t *testing.T) {
-	// t.Skip()
+	t.Skip()
 	testArr := "10"
 	res := removeKDigits(testArr, 2)
 	if res != "" {
@@ -32,7 +32,7 @@ func TestRemoveKDigits3(t *testing.T) {
 }
 
 func TestRemoveKDigits4(t *testing.T) {
-	// t.Skip()
+	t.Skip()
 	testArr := "1111114132"
 	res := removeKDigits(testArr, 2)
 	if res != "11111112" {
@@ -41,7 +41,7 @@ func TestRemoveKDigits4(t *testing.T) {
 }
 
 func TestRemoveKDigits5(t *testing.T) {
-	// t.Skip()
+	t.Skip()
 	testArr := "1111114132"
 	res := removeKDigits(testArr, 3)
 	if res != "1111111" {

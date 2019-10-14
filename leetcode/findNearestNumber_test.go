@@ -5,7 +5,7 @@ import (
 )
 
 func TestFindNearestNumber(t *testing.T) {
-	//t.Skip()
+	t.Skip()
 	testArr := []int{1, 2, 3, 5, 4}
 	testArr, err := FindNearestNumber(testArr)
 	if err != nil {
@@ -15,7 +15,7 @@ func TestFindNearestNumber(t *testing.T) {
 }
 
 func TestFindNearestNumber2(t *testing.T) {
-	//t.Skip()
+	t.Skip()
 	testArr := []int{1, 3, 8, 9, 8}
 	testArr, err := FindNearestNumber(testArr)
 	if err != nil {

@@ -5,6 +5,7 @@ import (
 )
 
 func TestCreateList(t *testing.T) {
+	t.Skip()
 	res := createNodeList([]int{2, 4, 3})
 	// printNodeList(res)
 	for _, val := range []int{2, 4, 3} {
@@ -17,6 +18,7 @@ func TestCreateList(t *testing.T) {
 }
 
 func TestAddTwoNumbers(t *testing.T) {
+	t.Skip()
 	l1 := createNodeList([]int{2, 4, 3})
 	l2 := createNodeList([]int{5, 6, 4})
 
@@ -30,6 +32,7 @@ func TestAddTwoNumbers(t *testing.T) {
 }
 
 func TestAddTwoNumbers2(t *testing.T) {
+	t.Skip()
 	l1 := createNodeList([]int{2, 4, 3, 2})
 	l2 := createNodeList([]int{5, 6, 4, 1, 5})
 
@@ -43,6 +46,7 @@ func TestAddTwoNumbers2(t *testing.T) {
 }
 
 func TestAddTwoNumbers3(t *testing.T) {
+	t.Skip()
 	l1 := createNodeList([]int{5})
 	// printNodeList(l1)
 	l2 := createNodeList([]int{5})
@@ -58,6 +62,7 @@ func TestAddTwoNumbers3(t *testing.T) {
 }
 
 func TestAddTwoNumbers4(t *testing.T) {
+	t.Skip()
 	l1 := createNodeList([]int{1})
 	l2 := createNodeList([]int{9, 9})
 
@@ -72,6 +77,7 @@ func TestAddTwoNumbers4(t *testing.T) {
 }
 
 func TestAddTwoNumbers5(t *testing.T) {
+	t.Skip()
 	l1 := createNodeList([]int{2, 4, 3})
 	l2 := createNodeList([]int{5, 6, 4})
 
@@ -85,6 +91,7 @@ func TestAddTwoNumbers5(t *testing.T) {
 }
 
 func TestAddTwoNumbers6(t *testing.T) {
+	t.Skip()
 	l1 := createNodeList([]int{2, 4, 3, 2})
 	l2 := createNodeList([]int{5, 6, 4, 1, 5})
 
@@ -98,6 +105,7 @@ func TestAddTwoNumbers6(t *testing.T) {
 }
 
 func TestAddTwoNumbers7(t *testing.T) {
+	t.Skip()
 	l1 := createNodeList([]int{5})
 	// printNodeList(l1)
 	l2 := createNodeList([]int{5})
@@ -113,7 +121,7 @@ func TestAddTwoNumbers7(t *testing.T) {
 }
 
 func TestAddTwoNumbers11(t *testing.T) {
-	// t.Skip()
+	t.Skip()
 	l1 := createNodeList([]int{1})
 	l2 := createNodeList([]int{9, 9})
 
@@ -127,7 +135,7 @@ func TestAddTwoNumbers11(t *testing.T) {
 }
 
 func TestAddTwoNumbers12(t *testing.T) {
-	// t.Skip()
+	t.Skip()
 	l1 := createNodeList([]int{2, 4, 3, 2})
 	l2 := createNodeList([]int{5, 6, 4, 1, 5})
 
@@ -141,7 +149,7 @@ func TestAddTwoNumbers12(t *testing.T) {
 }
 
 func TestAddTwoNumbers13(t *testing.T) {
-	// t.Skip()
+	t.Skip()
 	l1 := createNodeList([]int{2, 4, 3})
 	l2 := createNodeList([]int{5, 6, 4})
 

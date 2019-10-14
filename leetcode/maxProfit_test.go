@@ -61,7 +61,7 @@ func TestMaxProfit4(T *testing.T) {
 }
 
 func TestMaxProfit5(T *testing.T) {
-	// T.Skip()
+	T.Skip()
 	list1 := []int{1, 2, 4, 2, 5, 7, 2, 4, 9, 0}
 	profit := maxProfit(list1)
 	if profit != 13 {
