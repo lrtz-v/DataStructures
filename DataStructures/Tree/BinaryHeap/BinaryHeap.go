@@ -107,6 +107,31 @@ func findEqualInCycleArr(nums []int, target int) int {
         return -1
     }
 
+	p := rotationIndex(nums)
+
+	low := 0
+	high := len(nums) - 1
+
+	if p != -1 {
+		if nums[p] == target {
+			return p
+		}
+		if nums[len(nums)-1] >= target {
+			low = p + 1
+			high = len(nums)-1
+		} else if nums[0] <= target {
+			low = 0
+			high = p
+		} else {
+			return -1
+		}
+	}
+
+	return targetIndex(nums,low, high, target)
+}
+
+func rotationIndex(nums []int) int {
+
 	low := 0
 	high := len(nums) - 1
 	p := -1
@@ -127,22 +152,10 @@ func findEqualInCycleArr(nums []int, target int) int {
 		}
 	}
 
-	if p == -1 {
-		low = 0
-		high = len(nums) - 1
-	} else if nums[p] == target {
-		return p
-	}
+	return p
+}
 
-	if nums[len(nums)-1] >= target {
-		low = p + 1
-		high = len(nums)-1
-	} else if nums[0] <= target {
-		low = 0
-		high = p
-	} else {
-		return -1
-	}
+func targetIndex(nums []int, low, high, target int) int {
 
 	for low <= high {
 		mid := low + (high-low)>>1
@@ -155,6 +168,5 @@ func findEqualInCycleArr(nums []int, target int) int {
 			low = mid + 1
 		}
 	}
-
 	return -1
 }
