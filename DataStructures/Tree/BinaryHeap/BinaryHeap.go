@@ -1,6 +1,4 @@
-package BinaryHeap
-
-import "fmt"
+package binaryheap
 
 /*
 二叉堆
@@ -8,79 +6,155 @@ import "fmt"
 */
 
 // BinaryHeap 最大二叉堆
-type BinaryHeap struct {
-	heap []int
+
+// findFirstEqual
+func findFirstEqual(a []int, n int) int {
+
+	low := 0
+	high := len(a) - 1
+
+	for low <= high {
+		mid := low + (high-low)>>1
+
+		if a[mid] > n {
+			high = mid - 1
+		} else if a[mid] < n {
+			low = mid + 1
+		} else {
+			if mid == 0 || a[mid-1] != n {
+				return mid
+			}
+			high = mid - 1
+		}
+	}
+	return -1
 }
 
-// DownAdjust 下沉
-func (b *BinaryHeap) DownAdjust(parentIndex int) {
-	// 左节点
-	index := 2*parentIndex + 1
-	if index >= len(b.heap) {
-		return
-	}
+// findLastEqual
+func findLastEqual(a []int, n int) int {
 
-	// 右节点存在
-	if index+1 < len(b.heap) {
-		index = b.max(index, index+1)
-	}
+	low := 0
+	high := len(a) - 1
 
-	// 父节点大于等于任意子节点，跳出
-	if b.heap[parentIndex] >= b.heap[index] {
-		return
+	for low <= high {
+		mid := low + (high-low)>>1
+
+		if a[mid] > n {
+			high = mid - 1
+		} else if a[mid] < n {
+			low = mid + 1
+		} else {
+			if mid == n - 1 || a[mid+1] != n {
+				return mid
+			}
+			high = mid - 1
+		}
 	}
-	b.heap[parentIndex], b.heap[index] = b.heap[index], b.heap[parentIndex]
-	b.DownAdjust(index)
+	return -1
 }
 
-// 上浮
-func (b *BinaryHeap) upAdjust(index int) {
-	if index <= 0 {
-		return
+// findFirstBE (>=)
+func findFirstBE(a []int, n int) int {
+
+	low := 0
+	high := len(a) - 1
+
+	for low <= high {
+		mid := low + (high-low)>>1
+
+		if a[mid] < n {
+			low = mid + 1
+		} else {
+			if mid == 0 || a[mid-1] < n {
+				return mid
+			}
+			high = mid - 1
+		}
 	}
-	parentIndex := (index - 1) / 2
-	if b.heap[parentIndex] >= b.heap[index] {
-		return
+	return -1
+}
+
+// findLastLE (<=)
+func findLastLE(a []int, n int) int {
+
+	low := 0
+	high := len(a) - 1
+
+	for low <= high {
+		mid := low + (high-low)>>1
+
+		if a[mid] > n {
+			high = mid - 1
+		} else {
+			if mid == n - 1 || a[mid+1] > n {
+				return mid
+			}
+			low = mid + 1
+		}
 	}
-	b.heap[parentIndex], b.heap[index] = b.heap[index], b.heap[parentIndex]
-	b.upAdjust(parentIndex)
+	return -1
 }
 
-// Insert 插入新节点
-func (b *BinaryHeap) Insert(value int) {
-	b.heap = append(b.heap, value)
-	b.upAdjust(len(b.heap) - 1)
-}
+// findEqualInCycleArr: [4, 5, 6, 7, 1, 2, 3]
+func findEqualInCycleArr(nums []int, target int) int {
 
-// Pop the first element
-func (b *BinaryHeap) Pop() int {
-	lastIndex := len(b.heap) - 1
-	firstIndex := 0
-	b.heap[firstIndex], b.heap[lastIndex] = b.heap[lastIndex], b.heap[firstIndex]
-	val := b.heap[lastIndex]
-	b.heap = b.heap[0 : len(b.heap)-1]
-	b.DownAdjust(0)
-	return val
-}
+    if len(nums) == 0{
+        return -1
+    } else if len(nums) == 1{
+        if nums[0] == target {
+            return 0
+        }
+        return -1
+    }
 
-func (b *BinaryHeap) max(indexA, indexB int) int {
-	if b.heap[indexA] >= b.heap[indexB] {
-		return indexA
+	low := 0
+	high := len(nums) - 1
+	p := -1
+
+	for low < high {
+		mid := low + (high-low)>>1
+
+		if mid != len(nums) -1 && nums[mid] > nums[mid+1] {
+			p = mid
+			break
+		} else if mid != 0 && nums[mid - 1] > nums[mid] {
+			p = mid - 1
+			break
+		} else if nums[mid] > nums[low] {
+			low = mid + 1
+		} else if nums[mid] < nums[high] {
+			high = mid - 1
+		}
 	}
-	return indexB
-}
 
-// Print print
-func (b *BinaryHeap) Print() {
-	fmt.Println(b.heap)
-}
-
-// NewBinaryHeap init new binaryHeap
-func NewBinaryHeap(arr []int) *BinaryHeap {
-	b := &BinaryHeap{heap: arr}
-	// 构建二叉堆，所有非叶子节点依次下沉
-	for i := (len(b.heap) - 2) / 2; i >= 0; i-- {
-		b.DownAdjust(i)
+	if p == -1 {
+		low = 0
+		high = len(nums) - 1
+	} else if nums[p] == target {
+		return p
 	}
-	return b
+
+	if nums[len(nums)-1] >= target {
+		low = p + 1
+		high = len(nums)-1
+	} else if nums[0] <= target {
+		low = 0
+		high = p
+	} else {
+		return -1
+	}
+
+	for low <= high {
+		mid := low + (high-low)>>1
+
+		if nums[mid] == target {
+			return mid
+		} else if nums[mid] > target {
+			high = mid - 1
+		} else if nums[mid] < target {
+			low = mid + 1
+		}
+	}
+
+	return -1
 }
