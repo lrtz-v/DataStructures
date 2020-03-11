@@ -22,3 +22,18 @@ func TestInsert(t *testing.T) {
 
 	}
 }
+
+func TestZslRandomLevel(t *testing.T) {
+	count := make(map[int]int)
+
+	zsl := zslInit()
+	for i := 0; i < 10000; i++ {
+		level := zsl.zslRandomLevel()
+		if _, ok := count[level]; ok {
+			count[level] += 1
+		} else {
+			count[level] = 1
+		}
+	}
+	t.Log(count)
+}

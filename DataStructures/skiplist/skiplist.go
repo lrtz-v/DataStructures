@@ -108,8 +108,13 @@ func (zsl *zskiplist) insert(score float32, val int) *zskiplistNode {
 func (zsl *zskiplist) zslRandomLevel() int {
 	level := 1
 	p := ZSKIPLIST_P * 0xFFFF
-	for rand.Uint64()&0xFFFF < uint64(p) {
-		level += 1
+	for {
+		randInt := rand.Int63()&0xFFFF
+		if randInt < int64(p) {
+			level += 1
+		} else {
+			break
+		}
 	}
 	if level < ZSKIPLIST_MAXLEVEL {
 		return level
