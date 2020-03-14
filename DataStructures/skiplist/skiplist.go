@@ -108,17 +108,71 @@ func (zsl *zskiplist) insert(score float32, val int) *zskiplistNode {
 func (zsl *zskiplist) zslRandomLevel() int {
 	level := 1
 	p := ZSKIPLIST_P * 0xFFFF
-	for {
-		randInt := rand.Int63()&0xFFFF
-		if randInt < int64(p) {
-			level += 1
-		} else {
-			break
-		}
+	for rand.Int63()&0xFFFF < int64(p) {
+		level += 1
 	}
 	if level < ZSKIPLIST_MAXLEVEL {
 		return level
 	} else {
 		return ZSKIPLIST_MAXLEVEL
 	}
+}
+
+func zslFree(zsl *zskiplist) {
+	node := zsl.header.level[0].forward
+
+	zsl.header = nil
+	for node != nil {
+		next := node.level[0].forward
+		node = nil
+		node = next
+	}
+	zsl = nil
+}
+
+func (zsl *zskiplist) zslDeleteNode(x *zskiplistNode, update []*zskiplistNode) {
+	for i := 0; i < zsl.level; i++ {
+		if update[i].level[i].forward == x {
+			update[i].level[i].span += x.level[i].span - 1
+			update[i].level[i].forward = x.level[i].forward
+		} else {
+			update[i].level[i].span -= 1
+		}
+	}
+	if x.level[0].forward != nil {
+		x.level[0].forward.backward = x.backward
+	} else {
+		zsl.tail = x.backward
+	}
+	for zsl.level > 1 && zsl.header.level[zsl.level-1].forward == nil {
+		zsl.level--
+	}
+	zsl.length--
+}
+
+func (zsl *zskiplist) zslDelete(score float32) int {
+	update := make([]*zskiplistNode, ZSKIPLIST_MAXLEVEL)
+
+	x := zsl.header
+	for i := zsl.level - 1; i >= 0; i-- {
+		for x.level[i].forward != nil && x.level[i].forward.score < score {
+			x = x.level[i].forward
+		}
+		update[i] = x
+	}
+
+	x = x.level[0].forward
+	if x == nil {
+		return 0
+	}
+	for x != nil {
+		if score == x.score {
+			zsl.zslDeleteNode(x, update)
+			x = x.level[0].forward
+		} else {
+			return 0
+		}
+	}
+	return 1
+
 }
