@@ -174,5 +174,33 @@ func (zsl *zskiplist) zslDelete(score float32) int {
 		}
 	}
 	return 1
+}
 
+
+func (zsl *zskiplist) zslGetRank(score float32) int {
+	rank := 0
+    x := zsl.header
+    for i := zsl.level-1; i >= 0; i-- {
+        for x.level[i].forward != nil && x.level[i].forward.score < score {
+            rank += x.level[i].span
+            x = x.level[i].forward
+        }
+    }
+    return rank
+}
+
+// Finds an element by its rank
+func (zsl *zskiplist) zslGetElementByRank(rank int) *zskiplistNode {
+    traversed := 0
+    x := zsl.header
+    for i := zsl.level-1; i >= 0; i-- {
+        for x.level[i].forward != nil && (traversed + x.level[i].span) <= rank {
+            traversed += x.level[i].span
+            x = x.level[i].forward
+        }
+        if traversed == rank {
+            return x
+        }
+    }
+    return nil
 }
