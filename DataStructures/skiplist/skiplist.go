@@ -11,6 +11,7 @@ type zskiplistLevel struct {
 }
 
 type zskiplistNode struct {
+	key      string            // key
 	obj      int               // 存放该节点的数据
 	score    float32           // 数据对应的分数值，zset通过分数对数据升序排列
 	backward *zskiplistNode    // 指向链表上一个节点的指针，即后向指针
@@ -27,7 +28,7 @@ type zskiplist struct {
 // 跳表初始化
 func zslInit() *zskiplist {
 	zsl := &zskiplist{level: 1, length: 0}
-	zsl.header = zslNodeInit(ZSKIPLIST_MAXLEVEL, 0, 0)
+	zsl.header = zslNodeInit(ZSKIPLIST_MAXLEVEL, 0, 0, "")
 	for j := 0; j < ZSKIPLIST_MAXLEVEL; j++ {
 		zsl.header.level[j].forward = nil
 		zsl.header.level[j].span = 0
@@ -38,12 +39,12 @@ func zslInit() *zskiplist {
 }
 
 // 节点初始化
-func zslNodeInit(level int, score float32, val int) *zskiplistNode {
+func zslNodeInit(level int, score float32, val int, key string) *zskiplistNode {
 	l := make([]*zskiplistLevel, level)
 	for i := 0; i < level; i++ {
 		l[i] = &zskiplistLevel{}
 	}
-	return &zskiplistNode{obj: val, score: score, backward: nil, level: l}
+	return &zskiplistNode{obj: val, score: score, backward: nil, level: l, key: key}
 }
 
 func (zsl *zskiplist) insert(score float32, val int) *zskiplistNode {
@@ -77,7 +78,7 @@ func (zsl *zskiplist) insert(score float32, val int) *zskiplistNode {
 		zsl.level = level
 	}
 
-	x = zslNodeInit(level, score, val)
+	x = zslNodeInit(level, score, val, "")
 	for i := 0; i < level; i++ {
 		x.level[i].forward = update[i].level[i].forward
 		update[i].level[i].forward = x
@@ -176,31 +177,30 @@ func (zsl *zskiplist) zslDelete(score float32) int {
 	return 1
 }
 
-
 func (zsl *zskiplist) zslGetRank(score float32) int {
 	rank := 0
-    x := zsl.header
-    for i := zsl.level-1; i >= 0; i-- {
-        for x.level[i].forward != nil && x.level[i].forward.score < score {
-            rank += x.level[i].span
-            x = x.level[i].forward
-        }
-    }
-    return rank
+	x := zsl.header
+	for i := zsl.level - 1; i >= 0; i-- {
+		for x.level[i].forward != nil && x.level[i].forward.score < score {
+			rank += x.level[i].span
+			x = x.level[i].forward
+		}
+	}
+	return rank
 }
 
 // Finds an element by its rank
 func (zsl *zskiplist) zslGetElementByRank(rank int) *zskiplistNode {
-    traversed := 0
-    x := zsl.header
-    for i := zsl.level-1; i >= 0; i-- {
-        for x.level[i].forward != nil && (traversed + x.level[i].span) <= rank {
-            traversed += x.level[i].span
-            x = x.level[i].forward
-        }
-        if traversed == rank {
-            return x
-        }
-    }
-    return nil
+	traversed := 0
+	x := zsl.header
+	for i := zsl.level - 1; i >= 0; i-- {
+		for x.level[i].forward != nil && (traversed+x.level[i].span) <= rank {
+			traversed += x.level[i].span
+			x = x.level[i].forward
+		}
+		if traversed == rank {
+			return x
+		}
+	}
+	return nil
 }
