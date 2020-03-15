@@ -1,6 +1,9 @@
 package skiplist
 
-import "math/rand"
+import (
+	"math/rand"
+	"strings"
+)
 
 const ZSKIPLIST_MAXLEVEL = 32 // 最大层数为32
 const ZSKIPLIST_P = 0.25      // 被插入到高层的概率为1/4
@@ -47,7 +50,7 @@ func zslNodeInit(level int, score float32, val int, key string) *zskiplistNode {
 	return &zskiplistNode{obj: val, score: score, backward: nil, level: l, key: key}
 }
 
-func (zsl *zskiplist) insert(score float32, val int) *zskiplistNode {
+func (zsl *zskiplist) zslInsert(score float32, val int, key string) *zskiplistNode {
 	update := make([]*zskiplistNode, ZSKIPLIST_MAXLEVEL)
 	rank := make([]int, ZSKIPLIST_MAXLEVEL) // 用于计算span
 
@@ -59,7 +62,9 @@ func (zsl *zskiplist) insert(score float32, val int) *zskiplistNode {
 		} else {
 			rank[i] = rank[i+1]
 		}
-		for x.level[i].forward != nil && x.level[i].forward.score <= score {
+		for x.level[i].forward != nil &&
+			(x.level[i].forward.score < score ||
+				(x.level[i].forward.score == score && strings.Compare(x.level[i].forward.key, key) < 0)) {
 			rank[i] += x.level[i].span
 			x = x.level[i].forward
 		}
@@ -78,7 +83,7 @@ func (zsl *zskiplist) insert(score float32, val int) *zskiplistNode {
 		zsl.level = level
 	}
 
-	x = zslNodeInit(level, score, val, "")
+	x = zslNodeInit(level, score, val, key)
 	for i := 0; i < level; i++ {
 		x.level[i].forward = update[i].level[i].forward
 		update[i].level[i].forward = x
@@ -151,12 +156,14 @@ func (zsl *zskiplist) zslDeleteNode(x *zskiplistNode, update []*zskiplistNode) {
 	zsl.length--
 }
 
-func (zsl *zskiplist) zslDelete(score float32) int {
+func (zsl *zskiplist) zslDelete(score float32, key string) int {
 	update := make([]*zskiplistNode, ZSKIPLIST_MAXLEVEL)
 
 	x := zsl.header
 	for i := zsl.level - 1; i >= 0; i-- {
-		for x.level[i].forward != nil && x.level[i].forward.score < score {
+		for x.level[i].forward != nil &&
+			(x.level[i].forward.score < score ||
+				(x.level[i].forward.score == score && strings.Compare(x.level[i].forward.key, key) < 0)) {
 			x = x.level[i].forward
 		}
 		update[i] = x
@@ -166,27 +173,31 @@ func (zsl *zskiplist) zslDelete(score float32) int {
 	if x == nil {
 		return 0
 	}
-	for x != nil {
-		if score == x.score {
-			zsl.zslDeleteNode(x, update)
-			x = x.level[0].forward
-		} else {
-			return 0
-		}
+	for x != nil && score == x.score && strings.Compare(x.key, key) == 0 {
+		zsl.zslDeleteNode(x, update)
+		x = x.level[0].forward
 	}
 	return 1
 }
 
-func (zsl *zskiplist) zslGetRank(score float32) int {
+func (zsl *zskiplist) zslGetRank(score float32, key string) int {
 	rank := 0
 	x := zsl.header
 	for i := zsl.level - 1; i >= 0; i-- {
-		for x.level[i].forward != nil && x.level[i].forward.score < score {
+		for x.level[i].forward != nil &&
+			(x.level[i].forward.score < score ||
+				(x.level[i].forward.score == score && strings.Compare(x.level[i].forward.key, key) <= 0)){
 			rank += x.level[i].span
 			x = x.level[i].forward
 		}
+
+		/* x might be equal to zsl->header, so test if obj is non-NULL */
+        if x.key != "" && strings.Compare(x.key, key) == 0 {
+            return rank
+        }
+
 	}
-	return rank
+	return 0
 }
 
 // Finds an element by its rank
