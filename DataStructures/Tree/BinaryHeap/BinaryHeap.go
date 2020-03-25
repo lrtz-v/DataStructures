@@ -76,3 +76,7 @@ func (bh *BinaryHeap) toString() string {
 	}
 	return strings.Join(str, ",")
 }
+
+// todo insert
+
+// todo delete
