@@ -13,49 +13,46 @@ import (
 // BinaryHeap 二叉堆
 type BinaryHeap struct {
 	heap []int
-	len int
+	len  int
 }
 
 func CreateBinaryHeap(numbers []int) (heap *BinaryHeap) {
-	heap = &BinaryHeap{heap:numbers, len:len(numbers)}
+	heap = &BinaryHeap{heap: []int{0xFFFF}, len: len(numbers)+1}
+	heap.heap = append(heap.heap, numbers...)
 
-	if heap.len == 0 || heap.len == 1 {
+	if heap.len <= 2 {
 		return
 	}
 
-	// 构建堆O(n), 满足堆中的每个节点的值必须大于等于其子树中每个节点的值
+	// 构建堆O(n)
 	heap.buildHeap()
-
-	// 排序
-	heap.sort()
 
 	return
 }
 
 func (bh *BinaryHeap) buildHeap() {
-	// 从非叶子节点开始
-	for i := bh.len / 2; i >= 0; i-- {
-		bh.heapify(bh.len, i)
+	for i := bh.len-1; i >= 1; i-- {
+		bh.bubbleUp(i)
 	}
 }
 
-func (bh *BinaryHeap) heapify(n, i int) {
-	for {
-		maxPos := i
-		leftIndex := i*2+1
-		rightIndex := i*2+2
-		// 父节点必须大于左右子节点
-		if leftIndex < n && bh.less(i, leftIndex) {
-			maxPos = leftIndex
+func (bh *BinaryHeap) bubbleUp(k int) {
+	for ; k > 1 && bh.less(k/2, k); k = k / 2 {
+		bh.swap(k, k/2)
+	}
+}
+
+func (bh *BinaryHeap) bubbleDown(k int) {
+	for 2 * k <= bh.size() {
+		j := 2*k
+		if j < bh.size() && bh.less(j,j+1) {
+			j++
 		}
-		if rightIndex < n && bh.less(maxPos,rightIndex) {
-			maxPos = rightIndex
-		}
-		if maxPos == i {
+		if !bh.less(k, j) {
 			break
 		}
-		bh.swap(i, maxPos)
-		i = maxPos
+		bh.swap(k, j)
+		k = j
 	}
 }
 
@@ -67,28 +64,42 @@ func (bh *BinaryHeap) less(i, j int) bool {
 	return bh.heap[i] < bh.heap[j]
 }
 
-func (bh *BinaryHeap) sort() {
-	for i := bh.len-1; i > 0; i-- {
-		bh.swap(i, 0)
-		bh.heapify(i, 0)
-	}
+func (bh *BinaryHeap) insert(n int) {
+	bh.heap = append(bh.heap, n)
+	bh.increase()
+	bh.bubbleUp(bh.size()-1)
 }
+
+func (bh *BinaryHeap) pop() (top int) {
+	top = bh.heap[1]
+
+	bh.swap(1, bh.size()-1)
+
+	bh.heap = bh.heap[0 : bh.size()-1]
+	bh.decrease()
+
+	bh.bubbleDown(1)
+
+	return
+}
+
+func (bh *BinaryHeap) size() int {
+	return bh.len
+}
+
+func (bh *BinaryHeap) decrease() {
+	bh.len--
+}
+
+func (bh *BinaryHeap) increase() {
+	bh.len++
+}
+
 
 func (bh *BinaryHeap) toString() string {
 	var str []string
-	for _, v := range bh.heap {
-		str = append(str, strconv.Itoa(v))
+	for i := 1; i < bh.size(); i++ {
+		str = append(str, strconv.Itoa(bh.heap[i]))
 	}
 	return strings.Join(str, ",")
 }
-
-func (bh *BinaryHeap) insert(n int) {
-	bh.heap = append(bh.heap, n)
-	bh.len++
-
-	for i:=bh.len-1; i/2>=0 && bh.heap[i] < bh.heap[i/2]; i = i/2 {
-		bh.swap(i, i/2)
-	}
-}
-
-// todo delete
