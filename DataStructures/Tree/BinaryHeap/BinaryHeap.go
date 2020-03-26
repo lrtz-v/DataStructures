@@ -18,6 +18,11 @@ type BinaryHeap struct {
 
 func CreateBinaryHeap(numbers []int) (heap *BinaryHeap) {
 	heap = &BinaryHeap{heap:numbers, len:len(numbers)}
+
+	if heap.len == 0 || heap.len == 1 {
+		return
+	}
+
 	// 构建堆O(n), 满足堆中的每个节点的值必须大于等于其子树中每个节点的值
 	heap.buildHeap()
 
@@ -77,6 +82,13 @@ func (bh *BinaryHeap) toString() string {
 	return strings.Join(str, ",")
 }
 
-// todo insert
+func (bh *BinaryHeap) insert(n int) {
+	bh.heap = append(bh.heap, n)
+	bh.len++
+
+	for i:=bh.len-1; i/2>=0 && bh.heap[i] < bh.heap[i/2]; i = i/2 {
+		bh.swap(i, i/2)
+	}
+}
 
 // todo delete
