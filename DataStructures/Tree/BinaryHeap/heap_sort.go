@@ -7,17 +7,3 @@ func (bh *BinaryHeap) sort() {
 		bh.bubbleDown(1, n-2)
 	}
 }
-
-func (bh *BinaryHeap) sink(k, n int) {
-	for 2*k <= n {
-		j := 2 * k
-		if j < n && bh.less(j, j+1) {
-			j++
-		}
-		if !bh.less(k, j) {
-			break
-		}
-		bh.swap(k, j)
-		k = j
-	}
-}
