@@ -25,8 +25,9 @@ func TestInsert(t *testing.T) {
 
 func TestDelete(t *testing.T) {
 	testData := []int{57, 40, 38, 11, 13, 34, 48, 75, 6, 19, 9, 7}
-	bh := CreateBinaryHeap(testData)  // 75,57,48,40,19,34,38,11,6,13,9,7
+	bh := CreateBinaryHeap(testData) // 75,57,48,40,19,34,38,11,6,13,9,7
 	top := bh.pop()
+	t.Log(bh.toString())
 	if bh.heap[1] != 57 || top != 75 {
 		t.Fatal("pop 0 failed!")
 	}

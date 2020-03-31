@@ -17,7 +17,7 @@ type BinaryHeap struct {
 }
 
 func CreateBinaryHeap(numbers []int) (heap *BinaryHeap) {
-	heap = &BinaryHeap{heap: []int{0xFFFF}, len: len(numbers)+1}
+	heap = &BinaryHeap{heap: []int{0xFFFF}, len: len(numbers) + 1}
 	heap.heap = append(heap.heap, numbers...)
 
 	if heap.len <= 2 {
@@ -31,8 +31,9 @@ func CreateBinaryHeap(numbers []int) (heap *BinaryHeap) {
 }
 
 func (bh *BinaryHeap) buildHeap() {
-	for i := bh.len-1; i >= 1; i-- {
-		bh.bubbleUp(i)
+
+	for i := bh.size() / 2; i >= 1; i-- {
+		bh.bubbleDown(i, bh.size()-1)
 	}
 }
 
@@ -42,10 +43,10 @@ func (bh *BinaryHeap) bubbleUp(k int) {
 	}
 }
 
-func (bh *BinaryHeap) bubbleDown(k int) {
-	for 2 * k <= bh.size() {
-		j := 2*k
-		if j < bh.size() && bh.less(j,j+1) {
+func (bh *BinaryHeap) bubbleDown(k, n int) {
+	for 2*k <= n {
+		j := 2 * k
+		if j < n && bh.less(j, j+1) {
 			j++
 		}
 		if !bh.less(k, j) {
@@ -67,7 +68,7 @@ func (bh *BinaryHeap) less(i, j int) bool {
 func (bh *BinaryHeap) insert(n int) {
 	bh.heap = append(bh.heap, n)
 	bh.increase()
-	bh.bubbleUp(bh.size()-1)
+	bh.bubbleUp(bh.size() - 1)
 }
 
 func (bh *BinaryHeap) pop() (top int) {
@@ -78,7 +79,7 @@ func (bh *BinaryHeap) pop() (top int) {
 	bh.heap = bh.heap[0 : bh.size()-1]
 	bh.decrease()
 
-	bh.bubbleDown(1)
+	bh.bubbleDown(1, bh.size())
 
 	return
 }
@@ -94,7 +95,6 @@ func (bh *BinaryHeap) decrease() {
 func (bh *BinaryHeap) increase() {
 	bh.len++
 }
-
 
 func (bh *BinaryHeap) toString() string {
 	var str []string
