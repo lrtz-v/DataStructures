@@ -11,7 +11,7 @@ package string
 func bruteForce(A, B string) (index int) {
 
 	index = -1
-	for i := 0; i < len(A) - len(B); i++ {
+	for i := 0; i < len(A)-len(B); i++ {
 		if A[i:i+len(B)] == B {
 			index = i
 			break
