@@ -1,0 +1,6 @@
+package string
+
+/**
+ *	Rabin-Karp
+ */
+
