@@ -13,8 +13,14 @@
 
 ## KMP(Knuth-Morris-Pratt)
 
+- [KMP](https://wiki.jikexueyuan.com/project/kmp-algorithm/)
+
 ## BM（Boyer-Moore）
 
 - [boyer_moore](http://www.cs.jhu.edu/~langmea/resources/lecture_notes/boyer_moore.pdf)
 
 ## Sunday
+
+## 扩展
+
+- AC自动机
