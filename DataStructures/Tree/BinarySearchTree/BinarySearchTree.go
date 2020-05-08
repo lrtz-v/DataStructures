@@ -353,11 +353,11 @@ func (b *BinaryTree) Revert(root *TreeNode) {
 func PrintTree(root *TreeNode) [][]string {
 	data := make([][]string, 10)
 	level := 0
-	nodeList := []*TreeNode{root}
+	// nodeList := []*TreeNode{root}
 
-	for level < 10 {
-		eleNum := slot + 2 ^ level
-	}
+	// for level < 10 {
+	// 	eleNum := slot + 2 ^ level
+	// }
 
 	return data[0:level]
 }
