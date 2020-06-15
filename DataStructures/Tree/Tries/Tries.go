@@ -20,14 +20,6 @@ A Trie node field isEndOfWord is used to distinguish the node as end of word nod
 
 A simple structure to represent nodes of English alphabet can be as following,
 
-// Trie node
-struct TrieNode
-{
-     struct TrieNode *children[ALPHABET_SIZE];
-
-     // isEndOfWord is true if the node represents end of a word
-     bool isEndOfWord;
-};
 */
 
 const (
