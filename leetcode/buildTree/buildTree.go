@@ -19,33 +19,33 @@ import "fmt"
    15   7
 */
 
- // TreeNode Definition for a binary tree node.
+// TreeNode Definition for a binary tree node.
 type TreeNode struct {
-    Val int
-    Left *TreeNode
-    Right *TreeNode
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
 }
 
 func buildTree(preorder []int, inorder []int) *TreeNode {
 	if len(preorder) == 0 {
-        return nil
-    }
+		return nil
+	}
 
 	root := &TreeNode{Val: preorder[0]}
 
-	index := 0 
+	index := 0
 	for ; index < len(inorder); index++ {
 		if inorder[index] == root.Val {
 			break
 		}
 	}
 
-	iLeft := inorder[0: index]
-	pLeft := preorder[1: 1+len(iLeft)]
+	iLeft := inorder[0:index]
+	pLeft := preorder[1 : 1+len(iLeft)]
 	root.Left = buildTree(pLeft, iLeft)
 
 	iRight := inorder[index+1:]
-	pRight := preorder[1+len(iLeft): ]
+	pRight := preorder[1+len(iLeft):]
 	root.Right = buildTree(pRight, iRight)
 
 	return root
