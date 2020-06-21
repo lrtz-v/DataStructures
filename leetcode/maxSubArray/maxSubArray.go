@@ -1,28 +1,24 @@
 package maxSubArray
 
 func maxSubArray(nums []int) int {
+	sum := make([]int, len(nums))
+	sum[0] = nums[0]
+	m := nums[0]
 
-	n := len(nums)
-
-	if n == 0 {
-		return 0
-	} else if n == 1 {
-		return nums[0]
-	}
-
-	max := nums[0]
-	sum := 0
-
-	for _, v := range nums {
-		if sum > 0 {
-			sum += v
-		} else {
-			sum = v
-		}
-		if sum > max {
-			max = sum
+	for i := 1; i < len(nums); i++ {
+		tmp := max(sum[i-1] + nums[i], nums[i])
+		sum[i] = tmp
+		if tmp > m {
+			m = tmp
 		}
 	}
 
-	return max
+	return m
+}
+
+func max(a, b int) int {
+	if a >= b {
+		return a
+	}
+	return b
 }
