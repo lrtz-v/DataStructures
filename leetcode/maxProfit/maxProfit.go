@@ -1,31 +1,26 @@
 package maxProfit
 
 func maxProfit(prices []int) int {
+    l := len(prices)
+    if l == 0 {
+        return 0
+    }
+    m := prices[0]
+    
+    profit := 0
+    for i := 1; i < l; i++ {
+        if prices[i] - m > profit {
+            profit = prices[i] - m
+        }
+        m = min(m, prices[i])
+    }
+    
+    return profit
+}
 
-	n := len(prices)
-
-	start := 0
-	end := 0
-	first := 0
-	second := 0
-
-	for i := 1; i < n; i++ {
-		if prices[i] < prices[i-1] || i == n-1 {
-			if prices[i] < prices[i-1] {
-				end = i - 1
-			} else {
-				end = i
-			}
-			val := prices[end] - prices[start]
-			if val > first && val > second {
-				first, second = val, first
-			} else if val > second {
-				second = val
-			}
-			start = i
-		}
-	}
-
-	return first + second
-
+func min(a, b int) int {
+    if a <= b {
+        return a
+    }
+    return b
 }
