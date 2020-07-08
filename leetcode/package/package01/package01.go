@@ -61,7 +61,7 @@ func max(a, b int) int {
 func zeroOnePack(N, C int, value, weight []int) int {
 	m := make([]int, C+1)
 	for i := 1; i < N+1; i++ {
-		for w := C; w > 0; w-- {
+		for w := C; w >= weight[i-1]; w-- {
 			if weight[i-1] <= w {
 				m[w] = max(m[w], value[i-1] + m[w - weight[i-1]])
 			}
