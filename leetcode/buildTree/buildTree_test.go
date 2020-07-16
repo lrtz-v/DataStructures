@@ -1,4 +1,4 @@
-package buildTree
+package buildtree
 
 import "testing"
 

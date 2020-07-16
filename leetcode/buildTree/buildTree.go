@@ -1,6 +1,4 @@
-package buildTree
-
-import "fmt"
+package buildtree
 
 /*
 根据一棵树的前序遍历与中序遍历构造二叉树。
@@ -27,53 +25,27 @@ type TreeNode struct {
 }
 
 func buildTree(preorder []int, inorder []int) *TreeNode {
-	if len(preorder) == 0 {
-		return nil
-	}
-
-	root := &TreeNode{Val: preorder[0]}
-
-	index := 0
-	for ; index < len(inorder); index++ {
-		if inorder[index] == root.Val {
-			break
-		}
-	}
-
-	iLeft := inorder[0:index]
-	pLeft := preorder[1 : 1+len(iLeft)]
-	root.Left = buildTree(pLeft, iLeft)
-
-	iRight := inorder[index+1:]
-	pRight := preorder[1+len(iLeft):]
-	root.Right = buildTree(pRight, iRight)
-
-	return root
+    indexMap := make(map[int]int)
+    for i := 0; i < len(inorder); i++ {
+        indexMap[inorder[i]] = i
+    }
+    return build(preorder, inorder, 0, len(preorder) - 1, 0, len(inorder) - 1, indexMap)
 }
 
-func preOrder(root *TreeNode) {
-	if root == nil {
-		return
-	}
-	fmt.Println(root.Val)
-	preOrder(root.Left)
-	preOrder(root.Right)
-}
+func build(preorder, inorder []int, preorderStart, preorderEnd, inorderStart, inorderEnd int, indexMap map[int]int) *TreeNode {
+    if preorderStart > preorderEnd {
+        return nil
+    }
 
-func inOrder(root *TreeNode) {
-	if root == nil {
-		return
-	}
-	inOrder(root.Left)
-	fmt.Println(root.Val)
-	inOrder(root.Right)
-}
+    root := &TreeNode{Val: preorder[preorderStart]}
+    if preorderStart == preorderEnd {
+        return root
+    }
+    rootIndex := indexMap[preorder[preorderStart]]
+    leftNodes := rootIndex - inorderStart
+    rightNodes := inorderEnd - rootIndex
+    root.Left = build(preorder, inorder, preorderStart + 1, preorderStart + leftNodes, inorderStart, rootIndex - 1, indexMap)
+    root.Right = build(preorder, inorder, preorderEnd - rightNodes + 1, preorderEnd, rootIndex + 1, inorderEnd, indexMap)
 
-func afterOrder(root *TreeNode) {
-	if root == nil {
-		return
-	}
-	afterOrder(root.Left)
-	afterOrder(root.Right)
-	fmt.Println(root.Val)
+    return root
 }
