@@ -13,6 +13,6 @@ package threeSum
 ]
 */
 
-func threeSum(nums []int) [][]int {
+// func threeSum(nums []int) [][]int {
 
-}
+// }
