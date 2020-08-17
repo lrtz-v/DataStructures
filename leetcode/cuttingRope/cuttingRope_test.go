@@ -22,3 +22,10 @@ func TestCuttingRope3(t *testing.T) {
 		t.Fatalf("[*] testCuttingRope Failed. Expected 18, Got %d\n", max)
 	}
 }
+
+func TestCuttingRope4(t *testing.T) {
+	max := cuttingRope(3)
+	if max != 2 {
+		t.Fatalf("[*] testCuttingRope Failed. Expected 2, Got %d\n", max)
+	}
+}

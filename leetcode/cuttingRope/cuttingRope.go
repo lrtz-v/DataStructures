@@ -1,28 +1,32 @@
 package cuttingrope
 
 func cuttingRope(n int) int {
-	maxMap := make(map[int]int)
-	maxMap[1], maxMap[2] = 1, 1
-
-	for i := 1; i <= n; i++ {
-		findMax(maxMap, i)
-	}
-
-	return maxMap[n]
+	maxMap := make(map[int]int, n)
+	maxMap[1] = 1
+	return dp(maxMap, n)
 }
 
-func findMax(maxMap map[int]int, n int) {
-	m := 1
-	for i := 1; i < n; i++ {
-		m = max(maxMap[i] * maxMap[n-i], m)
+func dp(maxMap map[int]int, n int) int {
+	if n < 2 {
+		return maxMap[n]
 	}
-	maxMap[n] = m
+
+	if _, ok := maxMap[n]; ok {
+		return maxMap[n]
+	}
+
+	res := 1
+	for i := 1; i < n; i++ {
+		res = max(max(i * dp(maxMap, n - i), i*(n-i)), res)
+	}
+
+	maxMap[n] = res
+	return maxMap[n]
 }
 
 func max(a, b int) int {
 	if a >= b {
 		return a
 	}
-
 	return b
 }
