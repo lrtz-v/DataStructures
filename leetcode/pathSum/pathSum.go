@@ -8,5 +8,5 @@ type TreeNode struct {
 }
 
 func pathSum(root *TreeNode, sum int) [][]int {
-	
+	return [][]int{}
 }
