@@ -1,7 +1,5 @@
 package rotateRight
 
-import "fmt"
-
 type ListNode struct {
 	Val  int
 	Next *ListNode
@@ -38,22 +36,18 @@ func rotateRight(head *ListNode, k int) *ListNode {
 		return head
 	}
 
-	tmp := head
+	tail := head
 	n := 1
-	for tmp.Next != nil {
-		tmp = tmp.Next
+	for tail.Next != nil {
+		tail = tail.Next
 		n++
 	}
-	tmp.Next = head
+	tail.Next = head
 
-	tail := tmp
-	for i := k; i > 0; i-- {
-		tail = tail.Next
+	for i :=  n - k % n; i > 0; i-- {
+		tail, head = tail.Next, head.Next
 	}
-
-	newStart := tail.Next
 	tail.Next = nil
 
-	fmt.Printf("newStart: %d\n", newStart.Val)
-	return newStart
+	return head
 }
