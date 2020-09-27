@@ -39,8 +39,75 @@
 
 - binlog
 
+  - 使用场景
+
+    - 主从复制
+    - 数据恢复：借助 mysqlbinlog 工具
+
+  - 刷盘时机：sync_binlog 控制
+
+    - 0：不去强制要求，由系统自行判断何时写入磁盘
+    - 1：每次 commit 的时候都要将 binlog 写入磁盘
+    - N：每 N 个事务，才会将 binlog 写入磁盘
+
+  - 格式
+    - 基于行的日志：记录成每一行数据被修改的形式
+      - 优点：
+        - 不记录执行的 sql 语句的上下文相关的信息，仅需要记录那一条记录被修改成什么了
+      - 缺点：
+        - 所有的执行的语句当记录到日志中的时候，都将以每行记录的修改来记录，这样可能会产生大量的日志内容
+    - 基于 SQL 的日志：记录每一条会修改数据的 SQL
+      - 优点
+        - 不记录每一行数据的变化，文件较小
+        - 可以用于实时的还原，而不仅仅用于复制
+        - 主从版本可以不一样，从服务器版本可以比主服务器版本高
+      - 缺点：
+        - 不是所有的 UPDATE 语句都能被复制，尤其是包含不确定操作的时候
+        - 为了让这些语句在 slave 端也能正确执行，还必须记录每条语句在执行的时候的一些相关信息，也就是上下文信息，如部分函数
+    - Mixed：根据执行的每一条具体的 SQL 语句来区分对待记录的日志形式，在 statement 和 row 之间选择一种
+
 - redo log
+
+  - 物理日志，记录的是“在某个数据页上做了什么修改”
+  - 使用场景
+    - 用于保证 crash-safe 能力
+  - 刷盘时间：根据 innodb_flush_log_at_trx_commit 设置
+    - 设置为 0 的时候，表示每次事务提交时都只是把 redo log 留在 redo log buffer 中
+    - 设置为 1 的时候，表示每次事务提交时都将 redo log 直接持久化到磁盘
+    - 设置为 2 的时候，表示每次事务提交时都只是把 redo log 写到 page cache
+    - 定时写入
+      - 1.InnoDB 后台线程，每隔 1 秒，就会把 redo log buffer 中的日志，调用 write 写到文件系统的 page cache，然后调用 fsync 持久化到磁盘
+      - 2.redo log buffer 占用的空间即将达到 innodb_log_buffer_size 一半的时候，后台线程会主动写 page cache
+  - 为什么两阶段提交可以保证数据的一致性
+
+    - 写 redo log 之前崩溃
+      - 事务还没有开始提交，所以奔溃恢复跟该事务没有关系
+    - redolog 处于 prepare 状态，写 binlog 之前崩溃
+      - 重启恢复：redo log 的事务不完整，回滚
+      - 备份恢复：没有 binlog，数据一致。
+    - commit redo log 的时候奔溃
+      - 重启恢复：虽没有 commit，但满足 prepare 和 binlog 完整，所以重启后会自动 commit
+      - 备份恢复：有 binlog，数据一致。
+
+  - 重启恢复流程
+    - 读取 redo log， 从 checkpoint 对日志重放
+    - 检测哪些事务是完整的并且处于 prepare 状态
+    - 根据事务 ID（XID），对照 binlog， 如果找不到，则回滚
+
+- undo log
+
+  - 使用场景
+    - 事务回滚
+    - MVCC
+  - 写入时机
+    - DML 操作修改聚簇索引前，记录 undo log
+    - 二级索引记录的修改，不记录 undo log
+
+- relay log
+
+  - slave 将 master 的 binary log events 追加到它的中继日志（relay log）
+  - 解析 relay-log 的内容，执行
 
 - crash safe
 
-- 分布式事务
+  - 事务提交过程中任何阶段，MySQL 突然奔溃，重启后都能保证事务的完整性，已提交的数据不会丢失，未提交完整的数据会自动进行回滚
