@@ -2,6 +2,8 @@ package creationaldesignpattern
 
 import "sync"
 
+// 单例模式
+
 // Singleton type
 type Singleton map[string]string
 

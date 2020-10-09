@@ -1,5 +1,7 @@
 package creationaldesignpattern
 
+// 建造者模式
+
 // Beer interface
 type Beer interface {
 	Drink()

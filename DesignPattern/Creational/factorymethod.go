@@ -2,6 +2,8 @@ package creationaldesignpattern
 
 import "fmt"
 
+// 工厂方法模式
+
 // GoodsType type of Goods
 
 // Goods interface
