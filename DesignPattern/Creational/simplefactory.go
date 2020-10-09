@@ -1,5 +1,7 @@
 package creationaldesignpattern
 
+// 简单工厂模式
+
 // DrinkType type of drink
 type DrinkType int
 
