@@ -83,7 +83,16 @@
     - execute：提交不需要返回值的任务，所以无法判断任务是否被线程池执行成功与否
     - submit：提交需要返回值的任务，线程池会返回一个 Future 类型的对象
 
-  - ThreadPoolExecutor
+  - 通过 Executor 框架的工具类 Executors 创建
+
+    - FixedThreadPool
+      - 返回一个固定线程数量的线程池，当有一个新的任务提交时，线程池中若有空闲线程，则立即执行。若没有，则新的任务会被暂存在一个任务队列中，待有线程空闲时，便处理在任务队列中的任务
+    - SingleThreadExecutor
+      - 返回一个只有一个线程的线程池。若多余一个任务被提交到该线程池，任务会被保存在一个任务队列中，待线程空闲，按先入先出的顺序执行队列中的任务
+    - CachedThreadPool
+      - 返回一个可根据实际情况调整线程数量的线程池。线程池的线程数量不确定，但若有空闲线程可以复用，则会优先使用可复用的线程。若所有线程均在工作，又有新的任务提交，则会创建新的线程处理任务。所有线程在当前任务执行完毕后，将返回线程池进行复用
+
+  - 通过 ThreadPoolExecutor 创建
     - 参数
       - corePoolSize： 最小可以同时运行的线程数量
       - maximumPoolSize： 最大线程数
@@ -96,10 +105,49 @@
         - 处理新任务，直接丢弃掉
         - 丢弃最早的未处理的任务请求
         - 直接在 execute 方法的调用线程中运行被拒绝的任务
+    - 过程
+      - 提交任务
+      - 核心线程数未满，创建线程执行任务
+      - 检查 runState，加入队列
+        - 重新检查 runState，异常则移除任务
+        - 线程数未满，创建线程并执行任务
+      - 队列已满，执行 reject
 
 - 原子类（Atomic）
 
+  - 具有原子操作特征的类
+  - 类型
+
+    - 原子更新基本类型
+    - 原子更新数组
+    - 原子更新引用
+    - 原子更新属性
+
   - 主要利用 CAS (compare and swap) + volatile 和 native 方法来保证原子操作
+
+- CAS
+
+  - CAS 有 3 个操作数
+    - 内存值 V
+    - 旧的预期值 A
+    - 要修改的新值 B
+  - 如果内存值 V 和我们的预期值 A 相等，则将内存值修改为 B，操作成功！
+  - 如果内存值 V 和我们的预期值 A 不相等，一般也有两种情况：
+
+    - 重试(自旋)
+      - 计算内存地址 V、预期值 A 和更新值 B
+      - 比较 V 和 A，相等则将变量更新为 B，否则进行自选，重新走一遍这两个步骤
+    - 什么都不做，ZAS 失败
+
+  - ABA 问题：待修改变量可能经过多次更新，但最终与预期值一致，但线程无法感知修改过程
+    - 解决 ABA 问题：使用 JDK 给我们提供的 AtomicStampedReference 和 AtomicMarkableReference 类
+      - AtomicStampedReference
+        - 为这个对象提供了一个 stamp 版本，并且这个版本如果被修改了，是自动更新的
+      - AtomicMarkableReference
+        - 为这个对象提供了 mark 标志，并且这个标志如果被修改了，是自动更新的
+  - 执行开销
+    - CAS 机制如果 expect 和 V 长时间都不一致，会进行自旋操作（即不断的重试），这会给 CPU 带来非常大的执行开销
+    - CAS 机制只能保证一个临界变量的原子操作 ，当操作涉及多个共享变量时 CAS 无效
 
 - 锁
 
@@ -108,17 +156,28 @@
     - 实现：
       - 版本号机制
       - CAS
-    - 缺点
-      - ABA
-        - compareAndSet：先检查当前引用是否等于预期引用，并且当前标志是否等于预期标志，如果全部相等，则以原子方式将该引用和该标志的值设置为给定的更新值
-      - 自旋 CAS 带来 CPU 开销
-  - 自旋锁：如果锁已经被其它线程获取，那么该线程将循环等待，然后不断的判断锁是否能够被成功获取，直到获取到锁才会退出循环
-    - 优点
-      - 线程的状态不会改变，不会使线程进入阻塞状态
-    - 缺点
-      - 循环等待，消耗 CPU
-      - 无法满足等待时间最长的线程优先获取锁
-      - 也无法保证可重入性
+
+- AQS
+
+  - 用来构建锁和同步器的框架
+  - 原理概览
+    - 如果被请求的共享资源空闲，则将当前请求资源的线程设置为有效的工作线程，并且将共享资源设置为锁定状态
+    - 如果被请求的共享资源被占用，那么就需要一套线程阻塞等待以及被唤醒时锁分配的机制，这个机制 AQS 是用 CLH 队列锁实现的，即将暂时获取不到锁的线程加入到队列中
+      - CLH 队列是一个双向链表，AQS 是将每条请求共享资源的线程封装成一个 CLH 的一个结点（Node）来实现锁的分配
+      - 使用一个 int 成员变量来表示同步状态，使用 volatile 修饰保证线程可见性；使用 CAS 对该同步状态进行原子操作实现对其值的修改
+  - 对资源的共享方式
+    - Exclusive（独占）：只有一个线程能执行，如 ReentrantLock(state 初始化为 0, state+1/-1)
+      - 公平锁：按照线程在队列中的排队顺序，先到者先拿到锁
+      - 非公平锁：当线程要获取锁时，无视队列顺序直接去抢锁，谁抢到就是谁的
+    - Share（共享）：多个线程可同时执行，如 CountDownLatch（state 也初始化为 N， countDown 时 state-1）；Semaphore 信号量（state 为一组 许可（permit），操作时首先要获取到许可，才能进行操作，操作完成后需要释放许可。如果没有获取许可，则阻塞到有许可被释放）
+  - 自定义同步器一般的方式
+    - 使用者继承 AbstractQueuedSynchronizer 并重写指定的方法
+      - isHeldExclusively()//该线程是否正在独占资源。只有用到 condition 才需要去实现它。
+      - tryAcquire(int)//独占方式。尝试获取资源，成功则返回 true，失败则返回 false。
+      - tryRelease(int)//独占方式。尝试释放资源，成功则返回 true，失败则返回 false。
+      - tryAcquireShared(int)//共享方式。尝试获取资源。负数表示失败；0 表示成功，但没有剩余可用资源；正数表示成功，且有剩余资源。
+      - tryReleaseShared(int)//共享方式。尝试释放资源，成功则返回 true，失败则返回 false。
+    - 将 AQS 组合在自定义同步组件的实现中，并调用其模板方法，而这些模板方法会调用使用者重写的方法
 
 - List、Set、Map
 
@@ -217,11 +276,59 @@
 
     - 作用：解决的是多个线程之间访问资源的同步性，被它修饰的方法或者代码块在任意时刻只能有一个线程执行
     - 使用方式
-      - 修饰方法：作用于当前对象实例加锁，进入同步代码前要获得 当前对象实例的锁
-      - 修饰静态方法：作用于类的所有对象实例 ，进入同步代码前要获得 当前 class 的锁
-      - 修饰代码块：对给定对象/类加锁
+      - 修饰实例方法：作用于当前对象实例加锁，进入同步代码前要获得 当前对象实例的锁
+      - 修饰静态方法：给当前类加锁，会作用于类的所有对象实例 ，进入同步代码前要获得 当前 class 的锁
+      - 修饰代码块：指定加锁对象，对给定对象/类加锁
 
   - volatile
+
+    - 防止 JVM 的指令重排
+    - 保证变量的可见性
+      - 指示 JVM，这个变量是共享且不稳定的，每次使用它都到主存中进行读取
+
+  - synchronized 关键字和 volatile 关键字的区别
+    - volatile 关键字是线程同步的轻量级实现，所以 volatile 性能肯定比 synchronized 关键字要好。但是 volatile 关键字只能用于变量而 synchronized 关键字可以修饰方法以及代码块。
+    - volatile 关键字能保证数据的可见性，但不能保证数据的原子性。synchronized 关键字两者都能保证。
+    - volatile 关键字主要用于解决变量在多个线程之间的可见性，而 synchronized 关键字解决的是多个线程之间访问资源的同步性。
+
+- synchronized 和 ReentrantLock 的区别
+
+  - 两者都是可重入锁
+    - “可重入锁” 指的是自己可以再次获取自己的内部锁
+    - 同一个线程每次获取锁，锁的计数器都自增 1，所以要等到锁的计数器下降为 0 时才能释放锁
+  - synchronized 依赖于 JVM 而 ReentrantLock 依赖于 API
+    - synchronized 是依赖于 JVM 实现的
+    - ReentrantLock 是 JDK 层面实现的
+  - ReentrantLock 比 synchronized 增加了一些高级功能
+    - 等待可中断
+      - ReentrantLock 提供了一种能够中断等待锁的线程的机制，通过 lock.lockInterruptibly() 来实现这个机制。也就是说正在等待的线程可以选择放弃等待，改为处理其他事情
+    - 可实现公平锁
+      - ReentrantLock 可以指定是公平锁还是非公平锁。而 synchronized 只能是非公平锁
+    - 可实现选择性通知（锁可以绑定多个条件）
+      - synchronized 关键字与 wait()和 notify()/notifyAll()方法相结合可以实现等待/通知机制。
+      - ReentrantLock 类当然也可以实现，但是需要借助于 Condition 接口与 newCondition()方法
+
+- ThreadLocal
+
+  - ThreadLocal 类主要解决的就是让每个线程绑定自己的值
+  - 每个 Thread 中都具备一个 ThreadLocalMap，而 ThreadLocalMap 可以存储以 ThreadLocal 为 key ，Object 对象为 value 的键值对
+  - 最终的变量是放在了当前线程的 ThreadLocalMap 中，并不是存在 ThreadLocal 上，ThreadLocal 可以理解为只是 ThreadLocalMap 的封装，传递了变量值
+  - ThreadLocalMap
+    - hash 冲突
+      - 遇到了 key 值相等的数据，直接更新即可；
+      - 遇到 key 为 null 的 Entry，直接替换更新；
+      - 如果找到 Entry 为 null 的槽位，则将数据放入该槽位中
+    - 过期 key 的探测式清理流程
+      - 探测式清理
+        - 遍历散列数组，从开始位置向后探测清理过期数据，将过期数据的 Entry 设置为 null
+        - 碰到未过期的数据则将此数据 rehash 后重新在 table 数组中定位，如果定位的位置已经有了数据，则会将未过期的数据放到最靠近此位置的 Entry=null 的桶中
+      - 启发式清理
+        - 探测式清理是以当前 Entry 往后清理，遇到值为 null 则结束清理，属于线性探测清理
+        - 从制定位置，遍历指定数量的 Extry，遇到过期 Entry，执行过期清理
+  - InheritableThreadLocal：父子线程共享
+    - InheritableThreadLocal 是在 new Thread 中的 init()方法给赋值的
+  - 场景
+    - requestId 传递
 
 - 深拷贝、浅拷贝
 
@@ -440,4 +547,3 @@
 - 正向代理与反向代理
 - CDN
 - DNS
-
