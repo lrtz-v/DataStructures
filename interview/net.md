@@ -137,7 +137,7 @@
 ## HTTP 和 HTTPS 的区别
 
 - 端口
-  - HTTP 的 URL 由“http://”起始且默认使用端口 80，而 HTTPS 的 URL 由“https://”起始且默认使用端口 443
+  - HTTP 的 URL 由 `http://` 起始且默认使用端口 80，而 HTTPS 的 URL 由 `https://` 起始且默认使用端口 443
 - 安全性和资源消耗
   - HTTP 协议运行在 TCP 之上，所有传输的内容都是明文
   - HTTPS 是运行在 SSL/TLS 之上的 HTTP 协议，SSL/TLS 运行在 TCP 之上。所有传输的内容都经过加密
