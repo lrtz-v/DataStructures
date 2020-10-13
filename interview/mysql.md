@@ -158,6 +158,19 @@
 - 自增值计算
   - 从 auto_increment_offset 开始，以 auto_increment_increment 为步长，持续叠加，直到找到第一个大于 X 的值
 
+- 自增值不连续
+  - 唯一键冲突
+  - 事务回滚
+
+- 自增锁：innodb_autoinc_lock_mode 参数设置
+  - innodb_autoinc_lock_mode 为0
+    - 语句执行后才释放锁（会影响并发度）
+  - innodb_autoinc_lock_mode 为1
+    - 普通 insert 语句，自增锁在申请主键的动作之后就马上释放
+    - 批量插入数据的语句，自增锁还是要等语句结束后才被释放
+  - innodb_autoinc_lock_mode 为2
+    - 所有的申请自增主键的动作都是申请后就释放锁
+
 ## 分布式事务
 
 ## 索引失效
