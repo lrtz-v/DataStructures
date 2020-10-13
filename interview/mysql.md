@@ -115,26 +115,32 @@
 ## MyISAM 和 InnoDB 的区别
 
 - 存储结构
+
   - MyISAM：表在磁盘上存储称为三个文件，表结构、数据、索引
   - InnoDB：数据文件按主键聚集
 
 - 事务支持
+
   - MyISAM：强调性能，每次查询具有原子性，不支持事务
   - InnoDB：支持事务
 
 - 锁差异
+
   - MyISAM：只支持表锁
   - InnoDB：支持行锁
 
 - 外键
+
   - MyISAM：不支持
   - InnoDB：支持
 
 - 行数
+
   - MyISAM：用一个变量保存了整个表的行数
   - InnoDB：不保存表的具体行数
 
 - 可移植性、备份与恢复
+
   - MyISAM：数据以文件的形式存储，数据转移会方便；在备份和恢复时可以针对某个表单独操作
   - InnoDB：binlog, redo log
 
@@ -145,33 +151,36 @@
 ## Mysql AUTO_INCREMENT
 
 - 自增值持久化
-  - 5.7及以前版本
+
+  - 5.7 及以前版本
     - 自增值保存在内存，重启后，取表中的 max(id)，然后将 max(id) + 1 作为自增值
-  - 8.0版本及以后
-    - 自增值变更记录在redo log中，依靠redo log恢复
+  - 8.0 版本及以后
+    - 自增值变更记录在 redo log 中，依靠 redo log 恢复
 
 - 自增值过程
-  - 当插入数据行的id字段指定为0、null 或未指定时，使用 AUTO_INCREMEN 值
+
+  - 当插入数据行的 id 字段指定为 0、null 或未指定时，使用 AUTO_INCREMEN 值
   - 如果 插入值 < 自增值，那么这个表的自增值不变
   - 如果 插入值 ≥ 自增值，就需要把当前自增值修改为新的自增值
 
 - 自增值计算
+
   - 从 auto_increment_offset 开始，以 auto_increment_increment 为步长，持续叠加，直到找到第一个大于 X 的值
 
 - 自增值不连续
+
   - 唯一键冲突
   - 事务回滚
+  - 批量插入数据，批量申请 id，会造成 id 浪费
 
 - 自增锁：innodb_autoinc_lock_mode 参数设置
-  - innodb_autoinc_lock_mode 为0
+  - innodb_autoinc_lock_mode 为 0
     - 语句执行后才释放锁（会影响并发度）
-  - innodb_autoinc_lock_mode 为1
+  - innodb_autoinc_lock_mode 为 1
     - 普通 insert 语句，自增锁在申请主键的动作之后就马上释放
-    - 批量插入数据的语句，自增锁还是要等语句结束后才被释放
-  - innodb_autoinc_lock_mode 为2
+    - 批量插入数据的语句，自增锁还是要等语句结束后才被释放（批量申请策略）
+  - innodb_autoinc_lock_mode 为 2
     - 所有的申请自增主键的动作都是申请后就释放锁
-
-## 分布式事务
 
 ## 索引失效
 
@@ -185,7 +194,22 @@
   - 解决办法
     - force index
     - 修改语句，引导 MySQL 使用我们期望的索引
-      - 利用limit、order by
+      - 利用 limit、order by
     - 统计数据修正
       - analyze table t 重新统计索引数据
     - 创建更合适的索引，删除旧索引
+
+## 临时表
+
+- UNION 操作
+  - 使用临时表暂存数据
+  - UNION ALL 则不需要，结果不需要去重，直接作为结果集返回
+- group by
+  - 使用临时表暂存数据并排序
+  - 优化
+    - 使用 generated column，构造 group by 使用的列
+    - 尽量让 group by 过程用上表的索引
+    - 如果 group by 需要统计的数据量不大，尽量只使用内存临时表；也可以通过适当调大 tmp_table_size 参数，来避免用到磁盘临时表
+    - 如果数据量实在太大，使用 SQL_BIG_RESULT 这个提示，来告诉优化器直接使用排序算法得到 group by 的结果
+
+## 分布式事务
