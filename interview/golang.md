@@ -2,7 +2,7 @@
 
 ## 基础
 
-### Go协程
+### Go 协程
 
 ### Go Worker Pool
 
