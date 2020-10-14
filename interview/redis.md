@@ -10,6 +10,8 @@
 - List
   - zipList
   - linkedList
+  - quickList
+    - 是一个ziplist组成的双向链表。每个节点使用ziplist来保存数据。
 - Hash
   - zipList
   - hashTable
@@ -17,7 +19,7 @@
   - int set
   - hashTable
 - Sorted Set
-  - zipList
+  - skiplist
   - dict 存储 member 对应的 score + skipList 存储根据 score 对 member 的定位结构
 - GEO
   - geohash
