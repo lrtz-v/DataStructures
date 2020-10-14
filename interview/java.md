@@ -110,8 +110,9 @@
       - 核心线程数未满，创建线程执行任务
       - 检查 runState，加入队列
         - 重新检查 runState，异常则移除任务
-        - 线程数未满，创建线程并执行任务
-      - 队列已满，执行 reject
+        - 线程数未满，判断是否需要新增线程
+      - 加入队列失败，尝试新建线程执行任务
+      - 执行 reject
 
 - Java 线程模型
 
@@ -148,7 +149,7 @@
 
 - CAS
 
-  - CAS 有 3 个操作数
+  - CAS 操作数
     - 内存值 V
     - 旧的预期值 A
     - 要修改的新值 B
@@ -211,8 +212,8 @@
   - HashMap：数组+链表/红黑树
   - HashTable：数组+链表；线程安全
   - ConcurrentHashMap：线程安全
-  - 首先获得对应的 Segment 的锁； Segment 数组 + HashEntry 数组 + 链表
-  - 只锁定当前链表或红黑二叉树的首节点； Node 数组 + 链表 / 红黑树
+    - 首先获得对应的 Segment 的锁； Segment 数组 + HashEntry 数组 + 链表
+    - 只锁定当前链表或红黑二叉树的首节点； Node 数组 + 链表 / 红黑树
 
 - ArrayList、LinkedList；ArrayList 扩容
 
