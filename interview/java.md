@@ -81,7 +81,7 @@
   - execute/submit
 
     - execute：提交不需要返回值的任务，所以无法判断任务是否被线程池执行成功与否
-    - submit：提交需要返回值的任务，线程池会返回一个 Future 类型的对象
+    - submit：提交需要返回值的任务，线程池会返回一个 Future 类型的对象；提交任务调用的是 execute
 
   - 通过 Executor 框架的工具类 Executors 创建
 
@@ -93,6 +93,7 @@
       - 返回一个可根据实际情况调整线程数量的线程池。线程池的线程数量不确定，但若有空闲线程可以复用，则会优先使用可复用的线程。若所有线程均在工作，又有新的任务提交，则会创建新的线程处理任务。所有线程在当前任务执行完毕后，将返回线程池进行复用
 
   - 通过 ThreadPoolExecutor 创建
+
     - 参数
       - corePoolSize： 最小可以同时运行的线程数量
       - maximumPoolSize： 最大线程数
@@ -105,14 +106,43 @@
         - 处理新任务，直接丢弃掉
         - 丢弃最早的未处理的任务请求
         - 直接在 execute 方法的调用线程中运行被拒绝的任务
-    - 过程
-      - 提交任务
-      - 核心线程数未满，创建线程执行任务
-      - 检查 runState，加入队列
-        - 重新检查 runState，异常则移除任务
-        - 线程数未满，判断是否需要新增线程
-      - 加入队列失败，尝试新建线程执行任务
-      - 执行 reject
+    - 任务调度
+      - 首先检测线程池运行状态，如果不是 RUNNING，则直接拒绝，线程池要保证在 RUNNING 的状态下执行任务
+      - 如果 workerCount < corePoolSize，则创建并启动一个线程来执行新提交的任务
+      - 如果 workerCount >= corePoolSize，且线程池内的阻塞队列未满，则将任务添加到该阻塞队列中
+      - 如果 workerCount >= corePoolSize && workerCount < maximumPoolSize，且线程池内的阻塞队列已满，则创建并启动一个线程来执行新提交的任务
+      - 如果 workerCount >= maximumPoolSize，并且线程池内的阻塞队列已满, 则根据拒绝策略来处理该任务, 默认的处理方式是直接抛异常
+    - 任务缓冲
+      - 阻塞队列
+        - ArrayBlockingQueue 有界队列：基于数组、ReentrantLock
+        - LinkedBlockingQueue 有界队列：基于链表、ReentrantLock
+        - SynchronousQueue 阻塞队列：写满队列、读空队列阻塞
+    - 任务申请
+
+      - 任务的执行
+        - 直接由新创建的线程执行
+        - 线程从任务队列中获取任务然后执行（ThreadPoolExecutor.getTask），执行完任务的空闲线程会再次去从队列中申请任务再去执行
+          - 线程池已停止，返回 null
+          - 检查 worker 线程是否过多，是，则返回 null
+          - 检查线程是否可回收，是，则限时获取任务；否，阻塞获取任务（核心线程可以无限等待获取任务，非核心线程要限时获取任务）
+
+    - Worker 线程管理
+      - Worker 线程
+        - ThreadPoolExecutor 使用 HashSet 保存 Worker 的引用
+        - 实现了 Runnable 接口
+        - 并持有一个线程 thread：在调用构造方法时通过 ThreadFactory 来创建的线程
+        - 一个初始化的任务 firstTask：保存传入的第一个任务
+        - Worker 通过继承 AQS 来实现独占锁这个功能，目的是实现不可重入的特性去反应线程现在的执行状态
+          - 1.lock 方法一旦获取了独占锁，表示当前线程正在执行任务中
+          - 2.如果正在执行任务，则不应该中断线程
+          - 3.如果该线程现在不是独占锁的状态，也就是空闲的状态，说明它没有在处理任务，这时可以对该线程进行中断
+          - 4.线程池在执行 shutdown 方法或 tryTerminate 方法时会调用 interruptIdleWorkers 方法来中断空闲的线程，interruptIdleWorkers 方法会使用 tryLock 方法来判断线程池中的线程是否是空闲状态；如果线程是空闲状态则可以安全回收。
+      - Worker 线程增加
+        - 通过 addWorker 方法
+      - Worker 线程回收
+        - 获取不到任务时，主动回收自己(processWorkerExit)
+          - 将 Worker 移除 HashSet
+          - 但由于引起线程销毁的可能性有很多，线程池还要判断是什么引发了这次销毁，是否要改变线程池的现阶段状态，是否要根据新状态，重新分配线程
 
 - Java 线程模型
 
