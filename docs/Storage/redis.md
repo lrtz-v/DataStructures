@@ -251,3 +251,5 @@
       - 新 key 的默认值 LFU_INIT_VAL
   - 过程
     - 采用抽样+回收池
+
+## Redis 对比 Etcd
