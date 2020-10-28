@@ -72,3 +72,21 @@
   - Always: 在任何情况下，只要容器不在运行状态，就自动重启容器
   - OnFailure: 只在容器异常时才自动重启容器
   - Never: 从来不重启容器
+
+## 控制器模式
+
+- Deployment -> ReplicaSet -> Pods
+  - 通过 ReplicaSet 的个数来描述应用的版本
+  - 再通过 ReplicaSet 的属性（比如 replicas 的值），来保证 Pod 的副本数量
+- ReplicaSet 负责通过“控制器模式”，保证系统中 Pod 的个数永远等于指定的个数
+- 水平扩展 / 收缩
+  - Deployment Controller 只需要修改它所控制的 ReplicaSet 的 Pod 副本个数就可以了
+  - kubectl scale deployment nginx-deployment --replicas=4
+- 滚动更新
+  - 将一个集群中正在运行的多个 Pod 版本，交替地逐一升级的过程
+  - 可以通过 RollingUpdateStrategy 配置一次“滚动”中创建/删除的 Pod 量
+  - 通过 kubectl rollout undo 回滚操作
+  - 修改过程
+    - kubectl rollout pause 暂停 Deployment
+    - kubectl edit / kubectl set image 修改 Deployment
+    - kubectl rollout resume 恢复 Deployment
