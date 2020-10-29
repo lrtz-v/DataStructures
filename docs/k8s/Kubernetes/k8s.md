@@ -73,7 +73,9 @@
   - OnFailure: 只在容器异常时才自动重启容器
   - Never: 从来不重启容器
 
-## 控制器模式
+## Deployment Controller 控制器模式
+
+### ReplicaSet
 
 - Deployment -> ReplicaSet -> Pods
   - 通过 ReplicaSet 的个数来描述应用的版本
@@ -90,3 +92,23 @@
     - kubectl rollout pause 暂停 Deployment
     - kubectl edit / kubectl set image 修改 Deployment
     - kubectl rollout resume 恢复 Deployment
+
+### StatefulSet
+
+- 应用状态
+  - 拓扑状态
+    - 服务之间存在启动顺序与依赖关系
+  - 存储状态
+    - 应用的多个实例分别绑定了不同的存储数据， Pod 的重启不影响数据一致
+
+## Service
+
+- Service 是 Kubernetes 项目中用来将一组 Pod 暴露给外界访问的一种机制
+
+- Service 又是如何被访问的
+  - 以 Service 的 VIP（Virtual IP，即：虚拟 IP）方式
+  - 以 Service 的 DNS 方式
+    - Normal Service
+      - 通过 DNS 解析获取，拿到 Service 的 VIP
+    - Headless Service
+      - 通过 DNS 解析获取，直接获取到一个 Pod 的 IP，不需要分配一个 VIP
