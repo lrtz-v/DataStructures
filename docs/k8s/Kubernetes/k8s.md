@@ -96,10 +96,25 @@
 ### StatefulSet
 
 - 应用状态
+
   - 拓扑状态
     - 服务之间存在启动顺序与依赖关系
+    - 使用 Pod 模板创建 Pod 的时候，对它们进行编号，并且按照编号顺序逐一完成创建工作
+    - 通过 Headless Service 的方式，StatefulSet 为每个 Pod 创建了一个固定并且稳定的 DNS 记录，来作为它的访问入口
   - 存储状态
     - 应用的多个实例分别绑定了不同的存储数据， Pod 的重启不影响数据一致
+    - PVC
+      - 使用方式
+        - 定义一个 PVC，声明想要的 Volume 的属性
+        - 在应用的 Pod 中，声明使用这个 PVC
+    - PV
+      - 根据 PVC 分配 Volume
+
+- 应用管理
+  - StatefulSet 的控制器直接管理的是 Pod
+    - 每个 Pod 的 hostname、名字等都是不同的、携带了编号的。而 StatefulSet 区分这些实例的方式，就是通过在 Pod 的名字里加上事先约定好的编号
+  - Kubernetes 通过 Headless Service，为这些有编号的 Pod，在 DNS 服务器中生成带有同样编号的 DNS 记录
+  - StatefulSet 还为每一个 Pod 分配并创建一个同样编号的 PVC
 
 ## Service
 
@@ -112,3 +127,4 @@
       - 通过 DNS 解析获取，拿到 Service 的 VIP
     - Headless Service
       - 通过 DNS 解析获取，直接获取到一个 Pod 的 IP，不需要分配一个 VIP
+      - 在 Yaml 文件中，clusterIP 字段的值是 None，这个 Service 被创建后并不会被分配一个 VIP，而是会以 DNS 记录的方式暴露出它所代理的 Pod；而它所代理的 Pod 是通过 Label Selector 机制选择出来的
