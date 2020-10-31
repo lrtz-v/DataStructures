@@ -92,6 +92,7 @@
     - kubectl rollout pause 暂停 Deployment
     - kubectl edit / kubectl set image 修改 Deployment
     - kubectl rollout resume 恢复 Deployment
+  - 设置 rollingUpdate 的 partition 控制 Pod 更新范围
 
 ### StatefulSet
 
@@ -128,3 +129,33 @@
     - Headless Service
       - 通过 DNS 解析获取，直接获取到一个 Pod 的 IP，不需要分配一个 VIP
       - 在 Yaml 文件中，clusterIP 字段的值是 None，这个 Service 被创建后并不会被分配一个 VIP，而是会以 DNS 记录的方式暴露出它所代理的 Pod；而它所代理的 Pod 是通过 Label Selector 机制选择出来的
+
+## DaemonSet
+
+- 运行 DaemonSet Pod
+  - 这个 Pod 运行在 Kubernetes 集群里的每一个节点（Node）上
+  - 每个节点上只有一个这样的 Pod 实例
+  - 当有新的节点加入 Kubernetes 集群后，该 Pod 会自动地在新节点上被创建出来；而当旧节点被删除后，它上面的 Pod 也相应地会被回收掉
+- 使用场景
+  - 各种网络插件的 Agent 组件，都必须运行在每一个节点上，用来处理这个节点上的容器网络
+  - 各种存储插件的 Agent 组件，也必须运行在每一个节点上，用来在这个节点上挂载远程存储目录，操作容器的 Volume 目录
+  - 各种监控组件和日志组件，也必须运行在每一个节点上，负责这个节点上的监控信息和日志搜集
+- 如何保证每个 Node 上有且只有一个被管理的 Pod 呢
+  - Etcd 里获取所有的 Node 列表，然后遍历所有的 Node。检查当前这个 Node 上是不是有一个携带了 DaemonSet 指定标签的 Pod 在运行
+    - 如果没有，则需要创建
+    - 如果数量大于1，则需要删除多余的Pod
+    - 只有一个，则为正常
+- DaemonSet 只管理 Pod 对象，然后通过 nodeAffinity 和 Toleration 这两个调度器的小功能，保证了每个节点上有且只有一个 Pod
+
+## Job Controller
+
+- 并行作业的控制方法
+  - spec.parallelism，它定义的是一个 Job 在任意时间最多可以启动多少个 Pod 同时运行
+  - spec.completions，它定义的是 Job 至少要完成的 Pod 数目，即 Job 的最小完成数
+- Job Controller 的工作原理
+  - Job Controller 控制的对象，直接就是 Pod
+  - 根据实际在 Running 状态 Pod 的数目、已经成功退出的 Pod 的数目，以及 parallelism、completions 参数的值共同计算出在这个周期里，应该创建或者删除的 Pod 数目，然后调用 Kubernetes API 来执行这个操作
+
+- CronJob
+  - 通过 schedule 配置 Cron 表达式
+  - spec.concurrencyPolicy 配置 Job 执行时间过长，导致下一个创建 Pod 的周期到达的处理策略
