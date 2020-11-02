@@ -143,19 +143,76 @@
 - 如何保证每个 Node 上有且只有一个被管理的 Pod 呢
   - Etcd 里获取所有的 Node 列表，然后遍历所有的 Node。检查当前这个 Node 上是不是有一个携带了 DaemonSet 指定标签的 Pod 在运行
     - 如果没有，则需要创建
-    - 如果数量大于1，则需要删除多余的Pod
+    - 如果数量大于 1，则需要删除多余的 Pod
     - 只有一个，则为正常
 - DaemonSet 只管理 Pod 对象，然后通过 nodeAffinity 和 Toleration 这两个调度器的小功能，保证了每个节点上有且只有一个 Pod
 
 ## Job Controller
 
 - 并行作业的控制方法
+
   - spec.parallelism，它定义的是一个 Job 在任意时间最多可以启动多少个 Pod 同时运行
   - spec.completions，它定义的是 Job 至少要完成的 Pod 数目，即 Job 的最小完成数
+
 - Job Controller 的工作原理
+
   - Job Controller 控制的对象，直接就是 Pod
   - 根据实际在 Running 状态 Pod 的数目、已经成功退出的 Pod 的数目，以及 parallelism、completions 参数的值共同计算出在这个周期里，应该创建或者删除的 Pod 数目，然后调用 Kubernetes API 来执行这个操作
 
 - CronJob
+
   - 通过 schedule 配置 Cron 表达式
   - spec.concurrencyPolicy 配置 Job 执行时间过长，导致下一个创建 Pod 的周期到达的处理策略
+
+## Kubernetes“声明式 API”
+
+- 概念
+
+  - 所谓“声明式”，指的就是我只需要提交一个定义好的 API 对象来“声明”，我所期望的状态是什么样子
+  - “声明式 API”允许有多个 API 写端，以 PATCH 的方式对 API 对象进行修改，而无需关心本地原始 YAML 文件的内容
+  - Kubernetes 项目才可以基于对 API 对象的增、删、改、查，在完全无需外界干预的情况下，完成对“实际状态”和“期望状态”的调谐（Reconcile）过程
+
+- 一个 API 对象在 Etcd 里的完整资源路径，是由：Group（API 组）、Version（API 版本）和 Resource（API 资源类型）三个部分组成的
+
+  - 例如
+
+  ```yaml
+  apiVersion: batch/v2alpha1
+  kind: CronJob
+  ```
+
+  - “batch”就是它的组（Group），“v2alpha1” 就是它的版本（Version），“CronJob”就是这个 API 对象的资源类型（Resource）
+
+- Kubernetes 是如何对 Resource、Group 和 Version 进行解析，找到对象的定义呢
+
+  - 首先，Kubernetes 会匹配 API 对象的组
+    - 对于 Kubernetes 里的核心 API 对象，比如：Pod、Node 等，是不需要 Group 的（即：它们的 Group 是“”），Kubernetes 会直接在 /api 这个层级进行下一步的匹配过程
+    - 而对于 CronJob 等非核心 API 对象来说，Kubernetes 就必须在 /apis 这个层级里查找它对应的 Group
+  - 然后，Kubernetes 会进一步匹配到 API 对象的版本号
+  - 最后，Kubernetes 会匹配 API 对象的资源类型
+
+- APIServer 创建对象的过程
+
+  - 当我们发起了创建（例如：CronJob）的 POST 请求之后，我们编写的 YAML 的信息就被提交给了 APIServer；而 APIServer 的第一个功能，就是过滤这个请求，并完成一些前置性的工作，比如授权、超时处理、审计等
+  - 然后，请求会进入 MUX 和 Routes 流程；APIServer 的 Handler 要做的事情，就是按照上面介绍的匹配过程，找到对应的 CronJob 类型定义
+  - 根据这个（例如：CronJob） 类型定义，使用用户提交的 YAML 文件里的字段，创建一个 CronJob 对象
+    - APIServer 会进行一个 Convert 工作：把用户提交的 YAML 文件，转换成一个叫作 Super Version 的对象，它正是该 API 资源类型所有版本的字段全集。这样用户提交的不同版本的 YAML 文件，就都可以用这个 Super Version 对象来进行处理了
+  - APIServer 会先后进行 Admission() 和 Validation() 操作
+    - Admission：例如 Admission Controller 和 Initializer
+    - Validation：负责验证这个对象里的各个字段是否合法；这个被验证过的 API 对象，都保存在了 APIServer 里一个叫作 Registry 的数据结构中
+  - APIServer 会把验证过的 API 对象转换成用户最初提交的版本，进行序列化操作，并调用 Etcd 的 API 把它保存起来
+
+- 通过 CRD 自定义资源，并自定义控制器
+  - //TODO
+
+## RBAC
+
+- 在 Kubernetes 项目中，负责完成授权（Authorization）工作的机制
+- 概念
+  - Role：角色，它其实是一组规则，定义了一组对 Kubernetes API 对象的操作权限
+  - Subject：被作用者，既可以是“人”，也可以是“机器”，也可以是你在 Kubernetes 里定义的“用户”
+  - RoleBinding：定义了“被作用者”和“角色”的绑定关系
+
+## Etcd Operator
+
+- //TODO
