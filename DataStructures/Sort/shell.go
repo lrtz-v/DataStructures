@@ -33,7 +33,7 @@ func (shell Shell) Sort(l []int64) {
 
 	for h >= 1 {
 		for i := h; i < size; i++ {
-			for j := i; j >= h && shell.Less(l, j, j-h); j -= h {
+			for j := i; j >= h && shell.Less(l[j], l[j-h]); j -= h {
 				shell.Exch(l, j, j-h)
 			}
 		}

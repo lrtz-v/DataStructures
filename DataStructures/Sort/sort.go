@@ -17,8 +17,13 @@ func (s Template) Len(l []int64) int {
 }
 
 // Less check values
-func (s Template) Less(l []int64, a, b int) bool {
-	return l[a] < l[b]
+func (s Template) Less(a, b int64) bool {
+	return a < b
+}
+
+// Equal check values equal
+func (s Template) Equal(a, b int64) bool {
+	return a == b
 }
 
 // Exch exchanges in list

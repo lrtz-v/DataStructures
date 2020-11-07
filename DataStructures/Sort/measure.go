@@ -18,6 +18,12 @@ func measure(alg string, l []int64) float64 {
 	case "Shell":
 		shell := Shell{}
 		shell.Sort(l)
+	case "Merge":
+		merge := Merge{}
+		merge.Sort(l)
+	case "Quick":
+		quick := Quick{}
+		quick.Sort(l)
 	}
 
 	return time.Since(now).Seconds()

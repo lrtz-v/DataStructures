@@ -65,7 +65,7 @@ func (merge Merge) merge(l []int64, lo, mid, hi int) {
 		} else if j > hi {
 			l[k] = merge.aux[i]
 			i++
-		} else if merge.Less(merge.aux, j, i) {
+		} else if merge.Less(merge.aux[j], merge.aux[i]) {
 			l[k] = merge.aux[j]
 			j++
 		} else {

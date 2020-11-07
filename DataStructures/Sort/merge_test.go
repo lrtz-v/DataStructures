@@ -7,6 +7,7 @@ import (
 func TestMerge(t *testing.T) {
 	data := []int64{5, 6, 7, 1, 2, 3, 4}
 	m := Merge{}
+	m.aux = make([]int64, len(data))
 	m.merge(data, 0, 2, len(data)-1)
 }
 

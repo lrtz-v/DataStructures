@@ -27,7 +27,7 @@ func (insertion Insertion) Sort(l []int64) {
 	size := insertion.Len(l)
 
 	for i := 1; i < size; i++ {
-		for j := i; j > 0 && insertion.Less(l, j, j-1); j-- {
+		for j := i; j > 0 && insertion.Less(l[j], l[j-1]); j-- {
 			insertion.Exch(l, j, j-1)
 		}
 	}

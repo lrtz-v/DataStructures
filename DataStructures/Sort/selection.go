@@ -28,7 +28,7 @@ func (s Selection) Sort(l []int64) {
 	for i := 0; i < n; i++ {
 		minIndex := i
 		for j := i + 1; j < n; j++ {
-			if s.Less(l, j, minIndex) {
+			if s.Less(l[j], l[minIndex]) {
 				minIndex = j
 			}
 		}
