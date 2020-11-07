@@ -47,3 +47,13 @@ func randomSortedList(n int) []int64 {
 
 	return l
 }
+
+func randomReversedList(n int) []int64 {
+	l := []int64{}
+
+	for i := n; i > 0; i++ {
+		l = append(l, int64(i))
+	}
+
+	return l
+}
