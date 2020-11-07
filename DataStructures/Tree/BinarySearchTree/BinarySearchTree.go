@@ -3,7 +3,7 @@ package BinarySearchTree
 import (
 	"fmt"
 
-	"github.com/DataStructures/DataStructures/Queue"
+	"DataStructures/Queue"
 )
 
 /*	Binary Tree

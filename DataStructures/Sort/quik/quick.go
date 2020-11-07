@@ -1,7 +1,7 @@
 package quik
 
 import (
-	"github.com/DataStructures/DataStructures/Stack"
+	"DataStructures/Stack"
 )
 
 /*
