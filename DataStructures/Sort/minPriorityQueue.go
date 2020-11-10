@@ -1,40 +1,57 @@
 package sort
 
+/*
+* 最小堆
+* */
+
+// MinPriorityQueue struct
 type MinPriorityQueue struct {
 	PriorityQueue
 }
 
-// 上浮堆化
+// 上浮堆化, 父节点小于字节点
 func (pq MinPriorityQueue) Swim(k int) {
-	for k > 1 && pq.Less(k/2, k) {
+	for k > 1 && pq.Less(k, k/2) {
 		pq.Exch(k/2, k)
 		k /= 2
 	}
 }
 
-// 下沉堆化
+// 下沉堆化，父节点小于字节点
 func (pq MinPriorityQueue) Sink(k int) {
 	size := pq.Len()
 	for 2*k <= size {
 		j := 2 * k
-		if j < size && pq.Less(j, j+1) {
+		// 找到字节点最小值
+		if j < size && pq.Less(j+1, j) {
 			j++
 		}
-		if !pq.Less(k, j) {
+		// 比较父节点与子节点
+		if pq.Less(k, j) {
 			break
 		}
+		// 交换
 		pq.Exch(k, j)
 		k = j
 	}
 }
 
-func (pq MinPriorityQueue) Insert(v int64) {}
-
-func (pq MinPriorityQueue) DelMin(v int64) int64 {
-	return 0
+// Insert 插入元素，上浮调整
+func (pq MinPriorityQueue) Insert(v int64) {
+	pq.queue = append(pq.queue, v)
+	pq.count++
+	pq.Swim(pq.count)
 }
 
-// Sort 最小堆排序
+// DelMin 删除最小元素
+func (pq MinPriorityQueue) DelMin(v int64) int64 {
+	min := pq.queue[1]
+	pq.Exch(1, pq.count)
+	pq.Sink(1)
+	return min
+}
+
+// Sort 最小堆排序G
 func (pq MinPriorityQueue) Sort(l []int64) {
 	size := pq.Len()
 	for k := size / 2; k >= 1; k-- {
