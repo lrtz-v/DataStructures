@@ -6,6 +6,7 @@ import (
 
 // 随机数排序比较
 func TestMeasure(t *testing.T) {
+	t.Skip()
 	l := randomList(10000)
 	insertionTime := measure("Insertion", l)
 	selectionTime := measure("Selection", l)
@@ -21,6 +22,7 @@ func TestMeasure(t *testing.T) {
 
 // 有序数据比较
 func TestMeasure2(t *testing.T) {
+	t.Skip()
 	l := randomSortedList(10000)
 	insertionTime := measure("Insertion", l)
 	selectionTime := measure("Selection", l)
@@ -35,6 +37,7 @@ func TestMeasure2(t *testing.T) {
 }
 
 func TestMeasure3(t *testing.T) {
+	t.Skip()
 	l := randomReversedList(1000)
 	insertionTime := measure("Insertion", l)
 	selectionTime := measure("Selection", l)

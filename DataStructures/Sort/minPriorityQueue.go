@@ -1,5 +1,7 @@
 package sort
 
+import "errors"
+
 /*
 * 最小堆
 * */
@@ -9,16 +11,28 @@ type MinPriorityQueue struct {
 	PriorityQueue
 }
 
-// 上浮堆化, 父节点小于字节点
-func (pq MinPriorityQueue) Swim(k int) {
+// NewMinPriorityQueue create new MinPriorityQueue
+func NewMinPriorityQueue(q []int64) *MinPriorityQueue {
+	l := []int64{0}
+	if len(q) > 0 {
+		l = append(l, q...)
+	}
+	mq := &MinPriorityQueue{}
+	mq.queue = l
+	mq.count = len(q)
+	return mq
+}
+
+// Swim 上浮堆化, 父节点小于字节点
+func (pq *MinPriorityQueue) Swim(k int) {
 	for k > 1 && pq.Less(k, k/2) {
 		pq.Exch(k/2, k)
 		k /= 2
 	}
 }
 
-// 下沉堆化，父节点小于字节点
-func (pq MinPriorityQueue) Sink(k int) {
+// Sink 下沉堆化，父节点小于字节点
+func (pq *MinPriorityQueue) Sink(k int) {
 	size := pq.Len()
 	for 2*k <= size {
 		j := 2 * k
@@ -37,18 +51,31 @@ func (pq MinPriorityQueue) Sink(k int) {
 }
 
 // Insert 插入元素，上浮调整
-func (pq MinPriorityQueue) Insert(v int64) {
+func (pq *MinPriorityQueue) Insert(v int64) {
 	pq.queue = append(pq.queue, v)
 	pq.count++
 	pq.Swim(pq.count)
 }
 
 // DelMin 删除最小元素
-func (pq MinPriorityQueue) DelMin(v int64) int64 {
-	min := pq.queue[1]
-	pq.Exch(1, pq.count)
-	pq.Sink(1)
-	return min
+func (pq *MinPriorityQueue) DelMin() (int64, error) {
+	if pq.count > 0 {
+		min := pq.queue[1]
+		pq.Exch(1, pq.count)
+		pq.queue = pq.queue[:len(pq.queue)-1]
+		pq.count--
+		pq.Sink(1)
+		return min, nil
+	}
+	return 0, errors.New("MaxPriorityQueue is Empty")
+}
+
+// GetMin 查询最小值
+func (pq *MinPriorityQueue) GetMin() (int64, error) {
+	if pq.count > 0 {
+		return pq.queue[1], nil
+	}
+	return 0, errors.New("MaxPriorityQueue is Empty")
 }
 
 // Sort 最小堆排序G
@@ -58,9 +85,9 @@ func (pq MinPriorityQueue) Sort(l []int64) {
 		sink(l, k, size)
 	}
 	for size > 1 {
-		pq.Exch(1, size)
-		size--
+		exch(l, 1, size)
 		sink(l, 1, size)
+		size--
 	}
 }
 
@@ -76,4 +103,8 @@ func sink(l []int64, k, n int) {
 		l[k], l[j] = l[j], l[k]
 		k = j
 	}
+}
+
+func exch(l []int64, i, j int) {
+	l[i], l[j] = l[j], l[i]
 }

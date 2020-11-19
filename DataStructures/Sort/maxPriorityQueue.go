@@ -6,7 +6,9 @@ import (
 
 /*
 优先级队列
-
+插入元素：log(n)
+删除元素：log(n)
+排序：nlog(n)
 */
 
 // MaxPriorityQueue struct
@@ -14,15 +16,16 @@ type MaxPriorityQueue struct {
 	PriorityQueue
 }
 
+// NewMaxPriorityQueue create new MaxPriorityQueue
 func NewMaxPriorityQueue(q []int64) *MaxPriorityQueue {
 	l := []int64{0}
 	if len(q) > 0 {
 		l = append(l, q...)
 	}
-	mq := MaxPriorityQueue{}
+	mq := &MaxPriorityQueue{}
 	mq.queue = l
 	mq.count = len(q)
-	return &mq
+	return mq
 }
 
 // Swim 上浮堆化
@@ -60,11 +63,16 @@ func (pq *MaxPriorityQueue) Insert(v int64) {
 }
 
 // DelMax 删除最大节点：将最大元素与列表尾部元素交换，然后下沉首元素
-func (pq *MaxPriorityQueue) DelMax(v int64) int64 {
-	max := pq.queue[1]
-	pq.Exch(1, pq.count)
-	pq.Sink(1)
-	return max
+func (pq *MaxPriorityQueue) DelMax() (int64, error) {
+	if pq.count > 0 {
+		max := pq.queue[1]
+		pq.Exch(1, pq.count)
+		pq.queue = pq.queue[:len(pq.queue)-1]
+		pq.count--
+		pq.Sink(1)
+		return max, nil
+	}
+	return 0, errors.New("MaxPriorityQueue is Empty")
 }
 
 // GetMax get max value in MaxPriorityQueue
@@ -72,5 +80,5 @@ func (pq *MaxPriorityQueue) GetMax() (int64, error) {
 	if pq.count > 0 {
 		return pq.queue[1], nil
 	}
-	return 0, errors.New("MaxPriorityQueue is Empty.")
+	return 0, errors.New("MaxPriorityQueue is Empty")
 }
