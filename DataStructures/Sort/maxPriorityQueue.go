@@ -38,8 +38,7 @@ func (pq *MaxPriorityQueue) Swim(k int) {
 }
 
 // Sink 下沉堆化
-func (pq *MaxPriorityQueue) Sink(k int) {
-	size := pq.Len()
+func (pq *MaxPriorityQueue) Sink(k, size int) {
 	for 2*k <= size {
 		j := 2 * k
 		// 找到左右字节点最大的一个
@@ -69,7 +68,7 @@ func (pq *MaxPriorityQueue) DelMax() (int64, error) {
 		pq.Exch(1, pq.count)
 		pq.queue = pq.queue[:len(pq.queue)-1]
 		pq.count--
-		pq.Sink(1)
+		pq.Sink(1, pq.Len())
 		return max, nil
 	}
 	return 0, errors.New("MaxPriorityQueue is Empty")
@@ -81,4 +80,21 @@ func (pq *MaxPriorityQueue) GetMax() (int64, error) {
 		return pq.queue[1], nil
 	}
 	return 0, errors.New("MaxPriorityQueue is Empty")
+}
+
+// Sort 堆排序
+func (pq *MaxPriorityQueue) Sort() {
+	// 无序序列结构: pq.queue[1:pq.Len()]
+	size := pq.Len()
+
+	// 将给定无序序列构造成一个大顶堆
+	for k := size / 2; k >= 1; k-- {
+		// 从第一个非叶子结点从下至上，从右至左调整结构
+		pq.Sink(k, size)
+	}
+
+	for ; size > 1; size-- {
+		pq.Exch(1, size)
+		pq.Sink(1, size-1)
+	}
 }

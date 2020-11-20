@@ -11,11 +11,6 @@ func (pq *PriorityQueue) Len() int {
 	return pq.count
 }
 
-// Sort process sort
-func (pq *PriorityQueue) Sort() {
-
-}
-
 // Exch exchange elements
 func (pq *PriorityQueue) Exch(i, j int) {
 	pq.queue[i], pq.queue[j] = pq.queue[j], pq.queue[i]
@@ -30,7 +25,7 @@ func (pq *PriorityQueue) Less(i, j int) bool {
 func (pq *PriorityQueue) Swim(k int) {}
 
 // Sink element sink check
-func (pq *PriorityQueue) Sink(k int) {}
+func (pq *PriorityQueue) Sink(k, size int) {}
 
 // Insert add element
 func (pq *PriorityQueue) Insert(v int64) {}
@@ -43,4 +38,19 @@ func (pq *PriorityQueue) DelMax() (int64, error) {
 // DelMin delete min element
 func (pq *PriorityQueue) DelMin() (int64, error) {
 	return 0, nil
+}
+
+// IsSorted check sorted
+func (pq *PriorityQueue) IsSorted() bool {
+	for i := 2; i <= pq.Len(); i++ {
+		if pq.queue[i] < pq.queue[i-1] {
+			return false
+		}
+	}
+	return true
+}
+
+// Sort 堆排序
+func (pq *PriorityQueue) Sort() {
+
 }

@@ -140,3 +140,21 @@ func TestDelMax(t *testing.T) {
 		t.Fatal("Should be empty")
 	}
 }
+
+func TestSort(t *testing.T) {
+	data := []int64{1, 0, 2, 7, 10, 9}
+	mq := NewMaxPriorityQueue(data)
+	mq.Sort()
+	if !mq.IsSorted() {
+		t.Fatal(mq.queue)
+		t.Fatal("Sort failed")
+	}
+
+	data = []int64{1, 0, 1, 9, 10, 100, 2, 7, 10, 9}
+	mq = NewMaxPriorityQueue(data)
+	mq.Sort()
+	if !mq.IsSorted() {
+		t.Fatal(mq.queue)
+		t.Fatal("Sort failed")
+	}
+}

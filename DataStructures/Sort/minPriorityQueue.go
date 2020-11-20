@@ -3,8 +3,15 @@ package sort
 import "errors"
 
 /*
-* 最小堆
-* */
+最小堆
+
+堆排序的基本思想是：
+1.将待排序序列构造成一个大顶堆，此时，整个序列的最大值就是堆顶的根节点
+2.将其与末尾元素进行交换，此时末尾就为最大值
+3.然后将剩余n-1个元素重新构造成一个堆，这样会得到n个元素的次小值。如此反复执行，便能得到一个有序序列了
+
+PS：一般升序采用大顶堆，降序采用小顶堆
+*/
 
 // MinPriorityQueue struct
 type MinPriorityQueue struct {
@@ -32,8 +39,7 @@ func (pq *MinPriorityQueue) Swim(k int) {
 }
 
 // Sink 下沉堆化，父节点小于字节点
-func (pq *MinPriorityQueue) Sink(k int) {
-	size := pq.Len()
+func (pq *MinPriorityQueue) Sink(k, size int) {
 	for 2*k <= size {
 		j := 2 * k
 		// 找到字节点最小值
@@ -64,7 +70,7 @@ func (pq *MinPriorityQueue) DelMin() (int64, error) {
 		pq.Exch(1, pq.count)
 		pq.queue = pq.queue[:len(pq.queue)-1]
 		pq.count--
-		pq.Sink(1)
+		pq.Sink(1, pq.Len())
 		return min, nil
 	}
 	return 0, errors.New("MaxPriorityQueue is Empty")
@@ -76,35 +82,4 @@ func (pq *MinPriorityQueue) GetMin() (int64, error) {
 		return pq.queue[1], nil
 	}
 	return 0, errors.New("MaxPriorityQueue is Empty")
-}
-
-// Sort 最小堆排序G
-func (pq MinPriorityQueue) Sort(l []int64) {
-	size := pq.Len()
-	for k := size / 2; k >= 1; k-- {
-		sink(l, k, size)
-	}
-	for size > 1 {
-		exch(l, 1, size)
-		sink(l, 1, size)
-		size--
-	}
-}
-
-func sink(l []int64, k, n int) {
-	for 2*k <= n {
-		j := 2 * k
-		if j < n && l[j] < l[j+1] {
-			j++
-		}
-		if l[k] >= l[j] {
-			break
-		}
-		l[k], l[j] = l[j], l[k]
-		k = j
-	}
-}
-
-func exch(l []int64, i, j int) {
-	l[i], l[j] = l[j], l[i]
 }
