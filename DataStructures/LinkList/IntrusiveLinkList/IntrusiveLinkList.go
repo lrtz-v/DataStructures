@@ -1,4 +1,4 @@
-package main
+package intrusivelinklist
 
 /*
 	介入式链表✅

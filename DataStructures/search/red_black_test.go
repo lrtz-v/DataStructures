@@ -1,4 +1,4 @@
-package redblacktree
+package search
 
 import (
 	"testing"
