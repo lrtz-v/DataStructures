@@ -1,6 +1,6 @@
 package string
 
-func boyer_moore(s, p string) (index int) {
+func boyerMoore(s, p string) (index int) {
 
 	index = -1
 

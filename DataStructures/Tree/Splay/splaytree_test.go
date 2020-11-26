@@ -1,4 +1,4 @@
-package SplayTree
+package splay
 
 import (
 	"testing"

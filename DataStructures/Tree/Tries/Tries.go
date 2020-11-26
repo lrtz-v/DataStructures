@@ -1,4 +1,4 @@
-package Tries
+package tries
 
 /*
 

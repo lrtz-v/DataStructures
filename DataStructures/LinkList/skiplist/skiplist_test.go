@@ -37,7 +37,7 @@ func TestZslRandomLevel(t *testing.T) {
 	for i := 0; i < 10000; i++ {
 		level := zsl.zslRandomLevel()
 		if _, ok := count[level]; ok {
-			count[level] += 1
+			count[level]++
 		} else {
 			count[level] = 1
 		}

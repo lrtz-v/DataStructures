@@ -115,13 +115,12 @@ func (zsl *zskiplist) zslRandomLevel() int {
 	level := 1
 	p := ZSKIPLIST_P * 0xFFFF
 	for rand.Int63()&0xFFFF < int64(p) {
-		level += 1
+		level++
 	}
 	if level < ZSKIPLIST_MAXLEVEL {
 		return level
-	} else {
-		return ZSKIPLIST_MAXLEVEL
 	}
+	return ZSKIPLIST_MAXLEVEL
 }
 
 func zslFree(zsl *zskiplist) {
@@ -142,7 +141,7 @@ func (zsl *zskiplist) zslDeleteNode(x *zskiplistNode, update []*zskiplistNode) {
 			update[i].level[i].span += x.level[i].span - 1
 			update[i].level[i].forward = x.level[i].forward
 		} else {
-			update[i].level[i].span -= 1
+			update[i].level[i].span--
 		}
 	}
 	if x.level[0].forward != nil {

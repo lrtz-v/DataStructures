@@ -1,9 +1,8 @@
 package search
 
 import (
+	"DataStructures/queue"
 	"fmt"
-
-	"DataStructures/Queue"
 )
 
 /*	Binary Tree
@@ -202,7 +201,7 @@ func (b *BinaryTree) LevelTraversal() {
 	if b.Root == nil {
 		return
 	}
-	queue := Queue.NewQueue()
+	queue := queue.NewQueue()
 	queue.Push(b.Root)
 	for !queue.Empty() {
 		val, err := queue.Pop()
