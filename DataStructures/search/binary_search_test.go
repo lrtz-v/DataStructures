@@ -52,6 +52,7 @@ func TestBinaryTreeLevelRevert2(t *testing.T) {
 }
 
 func TestPrintTree(t *testing.T) {
+	t.Skip()
 	testData := []int{4, 2, 7, 1, 3, 6, 9}
 	BinaryTree := NewBinaryTree()
 	for _, data := range testData {
