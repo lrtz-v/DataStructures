@@ -11,15 +11,15 @@ type CBTInserter struct {
 }
 
 func Constructor(root *TreeNode) CBTInserter {
-
+	return CBTInserter{}
 }
 
 func (this *CBTInserter) Insert(v int) int {
-
+	return 0
 }
 
 func (this *CBTInserter) Get_root() *TreeNode {
-
+	return nil
 }
 
 /**
