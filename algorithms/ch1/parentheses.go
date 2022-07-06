@@ -25,7 +25,3 @@ func parenthesesValid(src string) bool {
 
 	return len(stack) == 0
 }
-
-func completeLeftParentheses(src string) string {
-
-}
